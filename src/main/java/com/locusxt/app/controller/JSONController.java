@@ -22,5 +22,4 @@ public class JSONController {
 		return shop;
 
 	}
-	
 }
