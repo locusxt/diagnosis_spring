@@ -17,8 +17,13 @@
         <script src="/SpringX/static/basic_js/jsrender.min.js"></script>
 
 		<script type="text/javascript">
-			var patient_info = {};
-			var chief_complaint_list = [];
+			var new_rule = {};
+			var new_rule_name;
+			var new_rule_terms = [];
+			var new_rule_hterms = [];
+
+			var add_term_type = "term";
+
 
 			function tmpl_render_html(tmpl, target, d){
 				var html = $(tmpl).render(d);
@@ -57,13 +62,96 @@
 				  dataType: 'json'
 				});
 			}
-			function update_basic_info(){
-				$('#patient_name').html($('#input_name').val());
-				$('#patient_gender').html($("input:radio[name='input_gender'][checked]").val());
-				$('#patient_age').html($('#input_age').val());
-				$('#case_office').html($('#input_office').val());
-				$('#case_id').html($('#input_id').val());
+
+			function node2str(n){
+				switch (n[0]){
+					case 'VAR':
+						return "?" + n[1];
+					case 'TYPE':
+						if (n[1].indexOf(':') < 0)
+							return 'ns:' + n[1];
+						else
+							return n[1];
+					default:
+						return n[1];
+				}
 			}
+
+			function term2str(t){
+				str = "(";
+				for (var i = 0; i < 3; ++i){
+					str += node2str(t[i]);
+					if (i != 2) str += ", ";
+				}
+				str += ")";
+				return str;
+			}
+
+			function term2rstr(t){
+				str = "";
+				for (var i = 0; i < 3; ++i){
+					str += t[i][1];
+					if (i != 2) str += "  ";
+				}
+				return str;
+			}
+
+			function refresh_terms_table(){
+				$('#terms_table').html('');
+				str = "<tr><th>term</th><th>原型</th><th>删除</th></tr>";
+				for (var i = 0; i < new_rule_terms.length; i++){
+					str += "<tr><td>";
+					str += term2str(new_rule_terms[i]);
+					str += "</td><td>";
+					str += term2rstr(new_rule_terms[i]);
+					str += "</td><td>";
+					str += "<a href='#' onclick='del_term(" + i + ");'><span>delete</span></a>"
+					str += "</td></tr>";
+					// console.log(str);
+				}
+				$('#terms_table').html(str);
+				$('#hterms_table').html('');
+				str = "<tr><th>hterm</th><th>原型</th><th>删除</th></tr>";
+				for (var i = 0; i < new_rule_hterms.length; i++){
+					str += "<tr><td>";
+					str += term2str(new_rule_hterms[i]);
+					str += "</td><td>";
+					str += term2rstr(new_rule_hterms[i]);
+					str += "</td><td>";
+					str += "<a onclick='del_hterm(" + i + ");'><span>delete</span></a>"
+					str += "</td></tr>";
+				}
+				$('#hterms_table').html(str);
+				gen_rule();
+			}
+
+			function gen_rule(){
+				str = "[";
+				rule_name = $('#input_rule_name').val();
+				if (rule_name != '')
+					str += rule_name + ": ";
+				for (var i = 0; i < new_rule_terms.length; i++){
+					str += term2str(new_rule_terms[i]);
+				}
+				str += "->";
+				for (var i = 0; i < new_rule_hterms.length; i++){
+					str += term2str(new_rule_hterms[i]);
+				}
+				str += "]";
+				$('#preview_rule').html(str);
+				return str;
+			}
+
+			function del_term(id){
+				new_rule_terms.splice(id, 1);
+				refresh_terms_table();
+			}
+
+			function del_hterm(id){
+				new_rule_hterms.splice(id, 1);
+				refresh_hterms_table();
+			}
+
 		</script>
 	</head>
 
@@ -82,7 +170,7 @@
 				<div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-left">
                        	<li><a href="">在线问诊</a></li>
-                        <li><a href="">添加规则</a></li>
+                        <li><a href="">规则管理</a></li>
                         <li><a href="">使用指南</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
@@ -95,89 +183,109 @@
 
 		<div class="container bs-docs-container">
 			<div class="row">
-				<div class="panel panel-default col-md-9">
+				<div class="panel panel-default col-md-12">
 					<div class="panel-body" role="main" id="top">
-						<div id="basic_info_section" class="bs-docs-section">
-							<h4 id="basic_info_title" class="page-header">基本信息</h4>
+						<div id="add_rule_section" class="bs-docs-section">
+							<h4 id="add_rule_title" class="page-header">添加规则</h4>
 							<div>
-								<p>
-									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-									<strong>姓名：</strong><span id="patient_name">&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;
-									<strong>性别：</strong><span id="patient_gender">&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;
-									<strong>年龄：</strong><span id="patient_age">&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;
-									<strong>科室：</strong><span id="case_office">&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;
-									<strong>ID号：</strong><span id="case_id">&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;
-									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-									<a href="" data-toggle="modal" data-target="#basic_info_modal"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+								<form class="form-horizontal">
+									<div class="control-group">
+										<label class="control-label col-sm-2" for="input_rule_name">name:</label>
+										<div class="col-sm-6">
+											<input onchange="gen_rule();" id="input_rule_name" class="form-control input-large" type="text" placeholder="输入规则名"></input>
+										</div>
+									</div>
 									<br />
-								</p>
+									<br />
+									<div class="control-group">
+										<label class="control-label col-sm-2" >terms:</label>
+										<div class="col-sm-10">
+											<!-- <a href="" data-toggle="modal" data-target="#new_term_modal"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a> -->
+											<a href="" onclick="add_term_type='term';" data-toggle="modal" data-target="#new_term_modal"><span aria-hidden="true">点击新建term</span></a>
+											<div>
+												<div class="col-sm-9">
+													<table id="terms_table" class="table">
+														
+													</table>
+												</div>
+											</div>
+										</div>
+									</div>
+									<br />
+									<br />
+									<div class="control-group">
+										<label class="control-label col-sm-2" >hterms:</label>
+										<div class="col-sm-10">
+											<!-- <a href="" data-toggle="modal" data-target="#new_term_modal"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a> -->
+											<a href="" onclick="add_term_type='hterm';" data-toggle="modal" data-target="#new_hterm_modal"><span aria-hidden="true">点击新建hterm</span></a>
+											<div>
+												<div class="col-sm-9">
+													<table id="hterms_table" class="table">
+														
+													</table>
+												</div>
+											</div>
+										</div>
+									</div>
+									<br />
+									<br />
+									<div class="control-group">
+										<label class="control-label col-sm-2" >preview:</label>
+										<div class="col-sm-10">
+											<div class="col-sm-12">
+												<p id="preview_rule"></p>
+											</div>
+										</div>
+									</div>
+								</form>
 							</div>
 							<br />
 						</div>
-
 					</div>
 				</div>
 			</div>
 		</div>
-		<!-- basic info Modal -->
-		<script type="text/javascript">
-			function gen_input(chname, egname){
-				str = "<div class=control-group><label class='control-label col-sm-2' for='input_" + egname + "'/>" + chname + "</label><div class=col-sm-10><input id='input_" + egname + "' class='form-control input-large' type=text placeholder='输入" + chname + "' /></div></div><br /><br />";
-				document.write(str);
-			}
-		</script>
-		<div class="modal fade" id="basic_info_modal" tabindex="-1" role="dialog" aria-labelledby="basic_info_modal_label" aria-hidden="true">
+
+
+
+		<!-- add new term Modal -->
+		<div class="modal fade" id="new_term_modal" tabindex="-1" role="dialog" aria-labelledby="new_term_label" aria-hidden="true">
 		  <div class="modal-dialog">
 			<div class="modal-content">
 			  <div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="basic_info_modal_label">基本信息</h4>
+				<h4 class="modal-title" id="new_term_label">新建term</h4>
 			  </div>
-			  <div class="modal-body" id="basic_info_modal_body">
+			  <div class="modal-body" id="new_term_body">
 				<div>
-					<form class="form-horizontal">
-						<script type="text/javascript">
-							gen_input("姓名", "name");
-						</script>
-						<div class="control-group">
-							<label class="control-label col-sm-2" for="input_gender">性别</label>
-							<div class="col-sm-10">
-								<label class="radio" onclick="$('#gender_male').attr('checked', true);$('#gender_female').attr('checked', false);">
-									<input id="gender_male" type="radio" value="男" name="input_gender" />
-										男
-								</label>
-								<label class="radio checked" onclick="$('#gender_female').attr('checked', true);$('#gender_male').attr('checked', false);">
-									<input id="gender_female" type="radio" value="女" name="input_gender" checked="checked" />
-										女
-								</label>
-							</div>
-						</div>
-						<br />
-						<br />
-						<div class="control-group">
-							<label class="control-label col-sm-2" for="input_age">年龄</label>
-							<div class="col-sm-10">
-								<select id="input_age" class="form-control select select-primary select-block mbl">
-		  						</select>
-		  						<script type="text/javascript">
-									for (var i = 0; i < 100; ++i){
-		    							$('#input_age').append("<option value=" + i + ">" + i + "</option>");
-		    						}
-		    					</script>
-							</div>
-						</div>
-						<br />
-						<br />
-						<script type="text/javascript">
-							gen_input("科室", "office");
-							gen_input("ID号", "id");
-						</script>
-					</form>
+					<script type="text/javascript">
+						function gen_node_input(nodeid){
+							str = "<div class=col-sm-12><div class=input-group><div class=input-group-btn><select id=ntype" + nodeid + " class='form-control select select-primary'><option value=VAR >变量</option><option value=TYPE >关系</option><option value=NUM >数字</option><option value=OTHER >其他</option></select></div><input type=text class=form-control id=ncontent" + nodeid + " /></div></div><br /><br />";
+							document.write(str);
+						}
+
+						function gen_new_term(){
+							var nodes = new Array(3);
+							for (var i = 0; i < 3; ++i){
+								var type = $('#ntype' + i).val();
+								var content = $('#ncontent' + i).val();
+								$('#ncontent' + i).val('');
+								nodes[i] = [type, content];
+							}
+							if (add_term_type == "term")
+								new_rule_terms.push(nodes);
+							else
+								new_rule_hterms.push(nodes);
+						}
+						gen_node_input(0);
+						gen_node_input(1);
+						gen_node_input(2);
+					</script>
 				</div>
 			  </div>
 			  <div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-				<button type="button" class="btn btn-primary" onclick="update_basic_info();" data-dismiss="modal">保存</button>
+				<button type="button" class="btn btn-primary" onclick="gen_new_term();refresh_terms_table();" data-dismiss="modal">保存</button>
 			  </div>
 			</div>
 		  </div>
@@ -214,6 +322,8 @@
 
         <script>
         videojs.options.flash.swf = "/SpringX/static/flat_ui/dist/js/vendors/video-js.swf";
+        refresh_terms_table();
+        refresh_hterms_table();
         </script>
 
 	</body>

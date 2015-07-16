@@ -55,7 +55,7 @@
 			            <br />
 			            <br />
 			            <br />
-			            <p><a class="btn btn-primary btn-lg" href="{% url 'diagnosis:test' %}" role="button">在线问诊</a></p>
+			            <p><a class="btn btn-primary btn-lg" href="" role="button">在线问诊</a></p>
 			            <br />
 			            <br />
 			            </div>
