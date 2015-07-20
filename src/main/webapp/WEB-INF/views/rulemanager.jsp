@@ -187,6 +187,35 @@
 				refresh_hterms_table();
 			}
 
+			function add_rule(new_rule){
+				str = "{\"type\":\"add\", \"rule\":\"" + new_rule + "\"}";
+				//console.log(str);
+				jQuery.ajax( {  
+		          type : 'POST',  
+		          contentType : 'application/json',  
+		          url : 'ajax/ruleManage',  
+		          data : str,  
+		          dataType : 'json',  
+		          success : function(data) {  
+		            alert("新增成功！");  
+		          },  
+		          error : function(data) {  
+		            alert("error")  
+		          }  
+		        });  
+			}
+
+			function list_rules(){
+				$.ajax( {
+					type : "get",
+					url : "ajax/get_complaints.do",
+					dataType:"json",
+					success : function(json) {
+						chief_complaint_list = json.complaintList;
+					}
+				});
+			}
+
 		</script>
 	</head>
 

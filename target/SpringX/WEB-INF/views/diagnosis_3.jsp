@@ -19,6 +19,10 @@
 		<script type="text/javascript">
 			var patient_info = {};
 			var chief_complaint_list = [];
+			var chief_complaint_last_time = ["一两天", "一周", "一个月", "几个月"];
+
+			patient_info['complaint'] = [];
+			patient_info['complaint_time'] = [];
 
 			function tmpl_render_html(tmpl, target, d){
 				var html = $(tmpl).render(d);
@@ -113,6 +117,85 @@
 								</p>
 							</div>
 							<br />
+							<script type="text/javascript">
+								function gen_text_input(chname, egname){
+									str = "<div class=\"control-group row\">\
+											<label class=\"control-label col-md-2\"><strong>" + chname + "</strong></label>" +
+											"<div class=\"col-md-8\">\
+												<div id=\"" + egname + "_show\">\
+													<p id=\"" + egname + "\"></p>\
+													<a id=\"" + egname + "_edit\" onclick=\"$('#" + egname + "_show').hide(); $('#" + egname +"_update').show()\"><span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span></a>\
+												</div>\
+												<div id=\"" + egname + "_update\" style=\"display:none;\">\
+													<textarea rows=\"3\" id=\"input_" + egname + "\" class=\"form-control\" placeholder=\"" + chname + "\" aria-describedby=\"sizing-addon1\"></textarea>\
+													<a id=\"" + egname + "_confirm\" onclick=\"$('#" + egname+ "').html($('#input_" + egname + "').val()); $('#" + egname + "_show').show(); $('#" + egname + "_update').hide()\"><span class=\"glyphicon glyphicon-ok\" aria-hidden=\"true\"></span></a>\
+													&nbsp;&nbsp;&nbsp;&nbsp;\
+													<a id=\"" + egname + "_cancel\" onclick=\" $('#" + egname + "_show').show(); $('#" + egname + "_update').hide()\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a>\
+													&nbsp;&nbsp;&nbsp;&nbsp;\
+													<a id=\"" + egname + "_cancel\" onclick=\"$('#input_" + egname + "').val(''); $('#" + egname + "').html(''); $('#" + egname + "_show').show(); $('#" + egname + "_update').hide()\"><span class=\"glyphicon glyphicon-trash\" aria-hidden=\"true\"></span></a>\
+												</div>\
+											</div>\
+										</div>\
+										<br />";
+									document.write(str);
+								}
+							</script>
+							<div id="patient_log" class="form-horizontal">
+								<script type="text/javascript">
+									gen_text_input("现病史", "current_log");
+									gen_text_input("既往史", "past_log");
+									gen_text_input("个人史", "personal_log");
+									gen_text_input("家族史", "family_log");
+								</script>
+							</div>
+						</div>
+
+						<script type="text/javascript">
+						function add_chief_complaint(){
+							patient_info['complaint'].push($('#input_chief_complaint').val());
+							patient_info['complaint_time'].push(chief_complaint_last_time[$('#input_chief_complaint_time').val()]);
+							update_chief_complaint_table();
+						}
+
+						function update_chief_complaint_table(){
+							str = "<tr>\
+									<th>症状</th>\
+									<th>持续时间</th>\
+									<th>删除</th>\
+								   </th>";
+							for (var i = 0; i < patient_info['complaint'].length; i++){
+								str += "<tr>\
+											<td>" + patient_info['complaint'][i] + "</td>\
+											<td>" + patient_info['complaint_time'][i] + "</td>\
+											<td> delete</td>\
+										</tr>";
+							}
+							$('#chief_complaint_table').html(str);
+						}
+						</script>
+
+						<div id="chief_complaint_section" class="bs-docs-section">
+							<h4 id="chief_complaint_title" class="page-header">主诉</h4>
+							<div class="col-sm-offset-1">
+								<select id="input_chief_complaint" class="form-control select select-primary select-block mbl">
+									<option value="背痛">背痛</option>
+									<option value="咳嗽">咳嗽</option>
+									<option value="头痛">头痛</option>
+  								</select>
+  								&nbsp;&nbsp;
+  								<select id="input_chief_complaint_time" class="form-control select select-primary select-block mbl">
+									<option value="0">一两天</option>
+									<option value="1">一周</option>
+									<option value="2">一月</option>
+									<option value="3">几个月</option>
+  								</select>
+  								&nbsp;&nbsp;&nbsp;&nbsp;
+  								<button type="button" class="btn btn-info" onclick="">添加</button>
+							</div>
+							<div class="col-sm-offset-1 col-sm-10">
+								<table id="chief_complaint_table" class="table">
+								</table>
+							</div>
 						</div>
 
 					</div>

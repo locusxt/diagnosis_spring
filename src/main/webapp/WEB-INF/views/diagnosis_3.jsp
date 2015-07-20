@@ -19,6 +19,12 @@
 		<script type="text/javascript">
 			var patient_info = {};
 			var chief_complaint_list = [];
+			var chief_complaint_last_time = ["一两天", "一周", "一个月", "几个月"];
+
+			patient_info['complaint'] = [];
+			patient_info['complaint_time'] = [];
+			patient_info['phy_exam'] = [];
+			patient_info['phy_exam_result'] = [];
 
 			function tmpl_render_html(tmpl, target, d){
 				var html = $(tmpl).render(d);
@@ -36,13 +42,14 @@
 				});
 			}
 
-			function get_complaints(){
+			function get_complaint_list(){
 				$.ajax( {
 					type : "get",
 					url : "ajax/get_complaints.do",
 					dataType:"json",
 					success : function(json) {
 						chief_complaint_list = json.complaintList;
+						update_chief_complaint_list();
 					}
 				});
 			}
@@ -57,12 +64,17 @@
 				  dataType: 'json'
 				});
 			}
+
 			function update_basic_info(){
 				$('#patient_name').html($('#input_name').val());
 				$('#patient_gender').html($("input:radio[name='input_gender'][checked]").val());
 				$('#patient_age').html($('#input_age').val());
 				$('#case_office').html($('#input_office').val());
 				$('#case_id').html($('#input_id').val());
+			}
+
+			function get_phy_exam(){
+				
 			}
 		</script>
 	</head>
@@ -97,7 +109,7 @@
 			<div class="row">
 				<div class="panel panel-default col-md-9">
 					<div class="panel-body" role="main" id="top">
-						<div id="basic_info_section" class="bs-docs-section">
+						<div id="basic_info_section" class="bs-docs-section row">
 							<h4 id="basic_info_title" class="page-header">基本信息</h4>
 							<div>
 								<p>
@@ -113,8 +125,150 @@
 								</p>
 							</div>
 							<br />
+							<script type="text/javascript">
+								function gen_text_input(chname, egname){
+									str = "<div class=\"control-group row\">\
+											<label class=\"control-label col-md-2\"><strong>" + chname + "</strong></label>\
+											<div class=\"col-md-8\">\
+												<div id=\"" + egname + "_show\">\
+													<p id=\"" + egname + "\"></p>\
+													<a id=\"" + egname + "_edit\" onclick=\"$('#" + egname + "_show').hide(); $('#" + egname +"_update').show()\"><span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span></a>\
+												</div>\
+												<div id=\"" + egname + "_update\" style=\"display:none;\">\
+													<textarea rows=\"3\" id=\"input_" + egname + "\" class=\"form-control\" placeholder=\"" + chname + "\" aria-describedby=\"sizing-addon1\"></textarea>\
+													<a id=\"" + egname + "_confirm\" onclick=\"$('#" + egname+ "').html($('#input_" + egname + "').val()); $('#" + egname + "_show').show(); $('#" + egname + "_update').hide()\"><span class=\"glyphicon glyphicon-ok\" aria-hidden=\"true\"></span></a>\
+													&nbsp;&nbsp;&nbsp;&nbsp;\
+													<a id=\"" + egname + "_cancel\" onclick=\" $('#" + egname + "_show').show(); $('#" + egname + "_update').hide()\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a>\
+													&nbsp;&nbsp;&nbsp;&nbsp;\
+													<a id=\"" + egname + "_cancel\" onclick=\"$('#input_" + egname + "').val(''); $('#" + egname + "').html(''); $('#" + egname + "_show').show(); $('#" + egname + "_update').hide()\"><span class=\"glyphicon glyphicon-trash\" aria-hidden=\"true\"></span></a>\
+												</div>\
+											</div>\
+										</div>\
+										<br />";
+									document.write(str);
+								}
+							</script>
+							<div id="patient_log" class="form-horizontal">
+								<script type="text/javascript">
+									gen_text_input("现病史", "current_log");
+									gen_text_input("既往史", "past_log");
+									gen_text_input("个人史", "personal_log");
+									gen_text_input("家族史", "family_log");
+								</script>
+							</div>
 						</div>
 
+						<script type="text/javascript">
+						function add_chief_complaint(){
+							patient_info['complaint'].push(chief_complaint_list[$('#input_chief_complaint').val()]);
+							patient_info['complaint_time'].push(chief_complaint_last_time[$('#input_chief_complaint_time').val()]);
+							update_chief_complaint_table();
+						}
+
+						function del_chief_complaint(id){
+							patient_info['complaint'].splice(id, 1);
+							patient_info['complaint_time'].splice(id, 1);
+							update_chief_complaint_table();
+						}
+
+						function update_chief_complaint_table(){
+							str = "<tr>\
+									<th>症状</th>\
+									<th>持续时间</th>\
+									<th>删除</th>\
+								   </th>";
+							for (var i = 0; i < patient_info['complaint'].length; i++){
+								str += "<tr>\
+											<td>" + patient_info['complaint'][i] + "</td>\
+											<td>" + patient_info['complaint_time'][i] + "</td>\
+											<td> <a href=\"javascript:void(0)\" onclick=\"del_chief_complaint(" + i + ");\">delete</a></td>\
+										</tr>";
+							}
+							$('#chief_complaint_table').html(str);
+						}
+
+						function update_chief_complaint_list(){
+							str = "";
+							for (var i = 0; i < chief_complaint_list.length; i++){
+								str += "<option value=\"" + i + "\">" + chief_complaint_list[i] + "</option>";
+							}
+							$('#input_chief_complaint').html(str);
+							$('#input_chief_complaint').val(0);
+							$("select").select2({dropdownCssClass: 'dropdown-inverse'});
+						}
+
+						</script>
+
+						<div id="chief_complaint_section" class="bs-docs-section row">
+							<h4 id="chief_complaint_title" class="page-header">主诉</h4>
+							<div class="col-sm-offset-1">
+								<select id="input_chief_complaint" class="form-control select select-primary select-block mbl">
+  								</select>
+  								&nbsp;&nbsp;
+  								<select id="input_chief_complaint_time" class="form-control select select-primary select-block mbl">
+									<option value="0">一两天</option>
+									<option value="1">一周</option>
+									<option value="2">一月</option>
+									<option value="3">几个月</option>
+  								</select>
+  								&nbsp;&nbsp;&nbsp;&nbsp;
+  								<button type="button" class="btn btn-info" onclick="add_chief_complaint();">添加</button>
+							</div>
+							<div class="col-sm-offset-1 col-sm-9">
+								<table id="chief_complaint_table" class="table">
+								</table>
+							</div>
+						</div>
+
+						<script type="text/javascript">
+
+							function update_phy_exam_table(){
+								str = "";
+								for (var i = 0; i < patient_info['phy_exam'].length; i++){
+									str += "<div class=\"control-group row\">\
+												<label class=\"control-label col-md-2\">\
+													<strong>" + patient_info['phy_exam'][i] + "</strong>\
+												</label>\
+												<div class=\"col-md-8\">\
+													<input id=\"phy" + i + "\" class=\"form-control input-large\" type=\"text\"></input>\
+												</div>\
+											</div>";
+								}
+								$('#phy_exam_content').html(str);
+							}
+						</script>
+
+						<div id="phy_exam_section" class="bs-docs-section row">
+							<h4 id="phy_exam_title" class="page-header">体格检查</h4>
+							<div id="phy_exam_content" class="col-sm-offset-1">
+								
+							</div>
+							<br />
+							<div class="col-sm-offset-1">
+  								<button type="button" class="btn btn-info" onclick="">更新</button>
+							</div>
+						</div>
+
+						<div id="recommend_exam_section" class="bs-docs-section row">
+							<h4 id="recommend_exam_title" class="page-header">推荐检查</h4>
+							<div class="col-sm-offset-1">
+
+							</div>
+						</div>
+
+						<div id="diagnosis_result_section" class="bs-docs-section row">
+							<h4 id="diagnosis_result_title" class="page-header">初步诊断结果</h4>
+							<div class="col-sm-offset-1">
+
+							</div>
+						</div>
+
+						<div id="solution_section" class="bs-docs-section row">
+							<h4 id="solution_title" class="page-header">处理意见</h4>
+							<div class="col-sm-offset-1">
+
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -203,18 +357,18 @@
 				</div>
 			 </div>
 		</footer>
-		<script type="text/javascript">
+
+		<script type="text/javascript" id="my_init">
+			get_complaint_list();
+			update_chief_complaint_table();
+		</script>
+
+		<script type="text/javascript" id="flat_ui_init">
 			$(':checkbox').radiocheck();
 			$(':radio').radiocheck('check');
 			$("select").select2({dropdownCssClass: 'dropdown-inverse'});
 			$(".tagsinput").tagsinput();
-
+        	videojs.options.flash.swf = "/SpringX/static/flat_ui/dist/js/vendors/video-js.swf";
 		</script>
-
-
-        <script>
-        videojs.options.flash.swf = "/SpringX/static/flat_ui/dist/js/vendors/video-js.swf";
-        </script>
-
 	</body>
 </html>
