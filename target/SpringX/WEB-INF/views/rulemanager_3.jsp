@@ -154,11 +154,23 @@
 														$('#symptom_select').html(str);
 													}
 												</script>
-												<select id="symptom_select" multiple="multiple" class="form-control multiselect multiselect-primary">
-												</select> 
-												<script type="text/javascript">
-													update_symptom();
-												</script>
+												<div class="control-group row">
+													<label class="control-label col-sm-2">症状名称：</label>
+													<div class="col-sm-10">
+														<select class="form-control select select-primary col-sm-4">
+														</select>
+													</div>
+												</div>
+												<div class="control-group row">
+													<label class="control-label col-sm-2">持续时间</label>
+													<div class="col-sm-10">
+														<div class="input-group">
+															<input id="dataipt1" type="text" class="form-control">
+											  				<span class="input-group-addon">~</span>
+											  				<input id="dataipt2"type="text" class="form-control">
+														</div>
+													</div>
+												</div>
 											</div>
 											<br />
 											<script type="text/javascript">
@@ -311,135 +323,6 @@
 					</div>
 				</div>
 			</div>
-		</div>
-
-
-
-		<!-- add new term Modal -->
-		<div class="modal fade" id="new_term_modal" tabindex="-1" role="dialog" aria-labelledby="new_term_label" aria-hidden="true">
-		  <div class="modal-dialog">
-			<div class="modal-content">
-			  <div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="new_term_label">新建term</h4>
-			  </div>
-			  <div class="modal-body" id="new_term_body">
-				<div>
-				  <!-- Nav tabs -->
-				  <ul class="nav nav-tabs" role="tablist">
-				    <li role="presentation" class="active"><a onclick="gen_term_type='standard';" href="#standard_term" aria-controls="standard_term" role="tab" data-toggle="tab">standard</a></li>
-				    <li role="presentation"><a onclick="gen_term_type='builtin';" href="#builtin_term" aria-controls="builtin_term" role="tab" data-toggle="tab">builtin</a></li>
-				    <li role="presentation"><a onclick="gen_term_type='custom';" href="#custom_term" aria-controls="custom_term" role="tab" data-toggle="tab">custom</a></li>
-				  </ul>
-
-				  <!-- Tab panes -->
-				  <div class="tab-content">
-				    <div role="tabpanel" class="tab-pane active" id="standard_term">
-				    	<br />
-				    	<script type="text/javascript">
-							function gen_node_input(nodeid){
-								str = "<div class=col-sm-12><div class=input-group><div class=input-group-btn><select id=ntype" + nodeid + " class='form-control select select-primary'><option value=VAR >变量</option><option value=TYPE >关系</option><option value=NUM >数字</option><option value=OTHER >其他</option></select></div><input type=text class=form-control id=ncontent" + nodeid + " /></div><br /></div><br /><br />";
-								document.write(str);
-							}
-
-							function gen_standard_term(){
-								var nodes = new Array(3);
-								for (var i = 0; i < 3; ++i){
-									var type = $('#ntype' + i).val();
-									var content = $('#ncontent' + i).val();
-									$('#ncontent' + i).val('');
-									nodes[i] = [type, content];
-								}
-								if (add_term_type == "term")
-									new_rule_terms.push(nodes);
-								else
-									new_rule_hterms.push(nodes);
-							}
-							gen_node_input(0);
-							gen_node_input(1);
-							gen_node_input(2);
-						</script>
-				    </div>
-				    <div role="tabpanel" class="tab-pane" id="builtin_term">
-				    	<script type="text/javascript">
-					    	function gen_builtin_term(){
-					    		var nodes = new Array(3);
-					    		nodes[0] = "builtin";
-					    		nodes[1] = $("#builtin_type").val();
-					    		nodes[2] = $("#builtin_vars").val();
-					    		$("#builtin_vars").val('');
-					    		if (add_term_type == "term")
-									new_rule_terms.push(nodes);
-								else
-									new_rule_hterms.push(nodes);
-					    	}
-				    	</script>
-				    	<br />
-				    	<div class="col-sm-12">
-				    		<div class="input-group">
-				    			<div class="input-group-btn">
-				    				<select id="builtin_type" class="form-control select select-primary">
-				    					<option value="le">le</option>
-				    					<option value="ge">ge</option>
-				    					<option value="sum">sum</option>
-				    				</select>
-				    			</div>
-				    			<input type="text" class="form-control" id="builtin_vars" placeholder="参数请以半角逗号分开"></input>
-				    		</div>
-				    	</div>
-				    	<br />
-				    	<br />
-				    </div>
-				    <div role="tabpanel" class="tab-pane" id="custom_term">
-				    	<script type="text/javascript">
-				    		function gen_custom_term(){
-				    			var nodes = new Array(2);
-				    			nodes[0] = "custom";
-				    			nodes[1] = $("#input_custom_term").val();
-				    			$("#input_custom_term").val("");
-				    			if (add_term_type == "term")
-									new_rule_terms.push(nodes);
-								else
-									new_rule_hterms.push(nodes);
-				    		}
-				    	</script>
-				    	<br />
-				    	<div class="col-sm-12">
-				    		<div>
-				    			<label>请输入自定义规则：</label>
-				    			<input type="text" class="form-control" id="input_custom_term" placeholder=""></input>
-				    		</div>
-				    		<br />
-				    	</div>
-				    	<br />
-				    	<br />
-				    </div>
-				  </div>
-
-				</div>
-			  </div>
-			  <div class="modal-footer">
-			  	<script type="text/javascript">
-			  		function gen_new_term(){
-			  			switch(gen_term_type){
-			  				case "standard":
-			  					gen_standard_term();
-			  					break;
-			  				case "builtin":
-			  					gen_builtin_term();
-			  					break;
-			  				case "custom":
-			  					gen_custom_term();
-			  					break;
-			  			}
-			  			refresh_terms_table();
-			  		}
-			  	</script>
-				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-				<button type="button" class="btn btn-primary" onclick="gen_new_term();" data-dismiss="modal">保存</button>
-			  </div>
-			</div>
-		  </div>
 		</div>
 
 		<!-- /.container -->

@@ -15,7 +15,7 @@ import com.locusxt.app.domain.RuleMsg;
 public class RuleController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String diagnosis(ModelMap model) {
-		return "rulemanager_2";
+		return "rulemanager_3";
 	}
 
 	@RequestMapping(value = "/ajax/ruleManage", method = RequestMethod.POST)
