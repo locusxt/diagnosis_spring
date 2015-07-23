@@ -22,10 +22,14 @@
 
 			rule_symptom_list = [];
 			rule_dataobj_list = [];
+			rule_disease_list = [];
+			rule_test_list = [];
 
 			symptom_list = ['toothache', 'headache', 'cough'];
 			dataobj_list = ['blood_pressure', 'temperature'];
 			dataobj_priority_list = ['has_test_pressure', 'has_test_temperature'];
+			disease_list = ['purefluza', 'diseaseA', 'diseaseB'];
+			test_list = ['testA', 'testB', 'testC'];
 
 
 			function tmpl_render_html(tmpl, target, d){
@@ -177,20 +181,21 @@
 
 													function symptom2rstr(spt){
 														str = "";
+														if (spt[2] != "" || spt[3] != ""){
+															if (spt[2] != "" && spt[3] != ""){
+																str += "持续" + spt[2] + "~" + spt[3] + "天";
+															}
+															else if (spt[2] != ""){
+																str += "持续" + spt[2] + "天以上";
+															}
+															else if (spt[3] != ""){
+																str += "持续不足" + spt[3] + "天";
+															}
+														}
 														if (spt[1] != "unselectd"){
 															str += spt[1] + " ";
 														}
 														str += symptom_list[spt[0]];
-														if (spt[2] != "" || spt[3] != ""){
-															str += ", ";
-															if (spt[2] != ""){
-																str += spt[2] + " < ";
-															}
-															str += "last_time";
-															if (spt[3] != ""){
-																str += " < " + spt[3];
-															}
-														}
 														return str;
 													}
 
@@ -207,6 +212,7 @@
 															str += "</tr>";
 														}
 														$('#symptom_table').html(str);
+														gen_readable_rule();
 													}
 												</script>
 												<div class="row">
@@ -223,10 +229,6 @@
 														<select id="symptom_select" class="form-control select select-primary col-sm-4">
 														</select>
 													</div>
-													<script type="text/javascript">
-														update_symptom();
-														update_symptom_table();
-													</script>
 												</div>
 												<br />
 												<div class="control-group row">
@@ -312,6 +314,7 @@
 														str += "</td></tr>";
 													}
 													$('#dataobj_table').html(str);
+													gen_readable_rule();
 												}
 
 												function del_dataobj(id){
@@ -338,10 +341,6 @@
 														</select>
 													</div>
 												</div>
-												<script type="text/javascript">
-													update_dataobj_name_select();
-													update_dataobj_table();
-												</script>
 												
 												<br />
 												<div class="control-group row">
@@ -371,24 +370,95 @@
 									</div>
 									<br />
 									<br />
+									<script type="text/javascript">
+										function update_disease_select(){
+											str = "";
+											for (var i = 0; i < disease_list.length; ++i){
+												str += "<option value=" + i + " > " + disease_list[i] + "</option>";
+											}
+											$('#disease_select').html(str);
+										}
+
+										function update_test_select(){
+											str = "";
+											for (var i = 0; i < test_list.length; ++i){
+												str += "<option value=" + i + " > " + test_list[i] + "</option>";
+											}
+											$('#test_select').html(str);
+										}
+
+										function update_possible_disease(){
+											if ($('#disease_select').val() != null)
+												rule_disease_list = $('#disease_select').val();
+										}
+
+										function update_test(){
+											if ($('#test_select').val() != null)
+												rule_test_list = $('#test_select').val();
+										}
+									</script>
 									<div class="control-group row">
 										<label class="control-label col-sm-2" ><strong>结论:</strong></label>
 										<div class="col-sm-10">
-											<div>
-												<select id="result_priority_select" class="form-control select select-primary col-sm-4">
-												</select>
-												<select id="result_select" class="form-control select select-primary col-sm-4">
-												</select>
+											<div class="control-group row">
+												<label class="control-label col-sm-2">可能疾病：</label>
+												<div class="col-sm-10">
+													<select id="disease_select" multiple="multiple" class="form-control multiselect multiselect-primary" onchange="gen_readable_rule();">
+													</select>
+												</div>
+											</div>
+											<br />
+											<div class="control-group row">
+												<label class="control-label col-sm-2">推荐诊断：</label>
+												<div class="col-sm-10">
+													<select id="test_select" multiple="multiple" class="form-control multiselect multiselect-primary" onchange="gen_readable_rule();">
+													</select>
+												</div>
 											</div>
 										</div>
 									</div>
 									<br />
 									<br />
+									<script type="text/javascript">
+										function gen_readable_rule(){
+											update_test();
+											update_possible_disease();
+
+											str = "如果 ";
+											for (var i = 0; i < rule_symptom_list.length; ++i){
+												if (i != 0) str += ",";
+												str += symptom2rstr(rule_symptom_list[i]);												
+											}
+											for (var i = 0; i < rule_dataobj_list.length; ++i){
+												if (i != 0) str += ",";
+												str += dataobj2rstr(rule_dataobj_list[i]);
+											}
+											str += ", 那么 ";
+											if (rule_disease_list.length != 0){
+												str += "可能患有 ";
+												for (var i = 0; i < rule_disease_list.length; ++i){
+													if (i != 0) str += "|";
+													str += disease_list[rule_disease_list[i]];
+												}
+												str += " ";
+											}
+											if (rule_test_list.length != 0){
+												str += "建议 ";
+												for (var i = 0; i < rule_test_list.length; ++i){
+													if (i != 0) str += "|";
+													str += test_list[rule_test_list[i]];
+												}
+											}
+											
+											$('#readable_rule').html(str);
+
+										}
+									</script>
 									<div class="control-group row">
 										<label class="control-label col-sm-2" ><strong>生成的规则:</strong></label>
 										<div class="col-sm-10">
 											<div>
-												<p id="preview_rule"></p>
+												<p id="readable_rule"></p>
 											</div>
 										</div>
 									</div>
@@ -422,6 +492,13 @@
 			 </div>
 		</footer>
 		<script type="text/javascript">
+			update_symptom();
+			update_symptom_table();
+			update_dataobj_name_select();
+			update_dataobj_table();
+			update_disease_select();
+			update_test_select();
+
 			$(':checkbox').radiocheck();
 			$(':radio').radiocheck('check');
 			$("select").select2({dropdownCssClass: 'dropdown-inverse'});
