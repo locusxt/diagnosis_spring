@@ -13,15 +13,15 @@ import com.locusxt.app.domain.RuleMsg;
 @Controller
 @RequestMapping("/rule")
 public class RuleController {
-	@RequestMapping(value="/", method = RequestMethod.GET)
-    public String diagnosis(ModelMap model) {
-        return "rulemanager";
-    }
-	
-	 @RequestMapping(value = "/ajax/ruleManage", method = RequestMethod.POST)
-	 public @ResponseBody ResponseMsg manageRule(@RequestBody RuleMsg msg){
-		 System.out.println(msg.getType());
-		 System.out.println(msg.getRule());
-		 return new ResponseMsg("ok");
-	 }
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public String diagnosis(ModelMap model) {
+		return "rulemanager_2";
+	}
+
+	@RequestMapping(value = "/ajax/ruleManage", method = RequestMethod.POST)
+	public @ResponseBody ResponseMsg manageRule(@RequestBody RuleMsg msg) {
+		System.out.println(msg.getType());
+		System.out.println(msg.getRule());
+		return new ResponseMsg("ok");
+	}
 }

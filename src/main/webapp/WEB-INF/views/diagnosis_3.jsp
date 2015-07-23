@@ -21,10 +21,10 @@
 			var chief_complaint_list = [];
 			var chief_complaint_last_time = ["一两天", "一周", "一个月", "几个月"];
 
-			patient_info['complaint'] = [];
-			patient_info['complaint_time'] = [];
-			patient_info['phy_exam'] = [];
-			patient_info['phy_exam_result'] = [];
+			patient_info.complaint = [];
+			patient_info.complaint_time = [];
+			patient_info.phy_exam = [];
+			patient_info.phy_exam_result = [];
 
 			function tmpl_render_html(tmpl, target, d){
 				var html = $(tmpl).render(d);
@@ -74,7 +74,14 @@
 			}
 
 			function get_phy_exam(){
-				
+				$.ajax({
+				  type: 'POST',
+				  url: "ajax/phy_exam",
+				  data: JSON.stringify (patient_info), // or JSON.stringify ({name: 'jonas'}),
+				  success: function(d) { alert('data: ' + d); },
+				  contentType: "application/json",
+				  dataType: 'json'
+				});
 			}
 		</script>
 	</head>
@@ -160,14 +167,14 @@
 
 						<script type="text/javascript">
 						function add_chief_complaint(){
-							patient_info['complaint'].push(chief_complaint_list[$('#input_chief_complaint').val()]);
-							patient_info['complaint_time'].push(chief_complaint_last_time[$('#input_chief_complaint_time').val()]);
+							patient_info.complaint.push(chief_complaint_list[$('#input_chief_complaint').val()]);
+							patient_info.complaint_time.push(chief_complaint_last_time[$('#input_chief_complaint_time').val()]);
 							update_chief_complaint_table();
 						}
 
 						function del_chief_complaint(id){
-							patient_info['complaint'].splice(id, 1);
-							patient_info['complaint_time'].splice(id, 1);
+							patient_info.complaint.splice(id, 1);
+							patient_info.complaint_time.splice(id, 1);
 							update_chief_complaint_table();
 						}
 
@@ -177,10 +184,10 @@
 									<th>持续时间</th>\
 									<th>删除</th>\
 								   </th>";
-							for (var i = 0; i < patient_info['complaint'].length; i++){
+							for (var i = 0; i < patient_info.complaint.length; i++){
 								str += "<tr>\
-											<td>" + patient_info['complaint'][i] + "</td>\
-											<td>" + patient_info['complaint_time'][i] + "</td>\
+											<td>" + patient_info.complaint[i] + "</td>\
+											<td>" + patient_info.complaint_time[i] + "</td>\
 											<td> <a href=\"javascript:void(0)\" onclick=\"del_chief_complaint(" + i + ");\">delete</a></td>\
 										</tr>";
 							}
@@ -221,7 +228,6 @@
 						</div>
 
 						<script type="text/javascript">
-
 							function update_phy_exam_table(){
 								str = "";
 								for (var i = 0; i < patient_info['phy_exam'].length; i++){

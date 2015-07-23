@@ -7,45 +7,46 @@ public class PatientInfo {
 	String office;
 	int age;
 	
-	public void setName(String name){
-		this.name = name;
-	}
+	String complaint[];
+	String complaintTime[];
+	String phyExam[];
+	String phyExamResult[];
 	
-	public String getName(){
-		return this.name;
-	}
+	public void setName(String name){this.name = name;}
 	
-	public void setGender(String gender){
-		this.gender = gender;
-	}
+	public String getName(){return this.name;}
 	
-	public String getGender(){
-		return this.gender;
-	}
+	public void setGender(String gender){this.gender = gender;}
 	
-	public void setId(String id){
-		this.id = id;
-	}
+	public String getGender(){return this.gender;}
 	
-	public String getId(){
-		return this.id;
-	}
+	public void setId(String id){this.id = id;}
 	
-	public void setOffice(String office){
-		this.office = office;
-	}
+	public String getId(){return this.id;}
 	
-	public String getOffice(){
-		return this.office;
-	}
+	public void setOffice(String office){this.office = office;}
 	
-	public void setAge(int age){
-		this.age = age;
-	}
+	public String getOffice(){return this.office;}
 	
-	public int getAge(){
-		return age;
-	}
+	public void setAge(int age){this.age = age;}
+	
+	public int getAge(){return age;}
+	
+	public void setComplaint(String complaint[]){this.complaint = complaint;}
+	
+	public String[] getComplaint(){return this.complaint;}
+	
+	public void setComplaintTime(String complaintTime[]){this.complaintTime = complaintTime;}
+	
+	public String[] getComplaintTime(){return this.complaintTime;}
+	
+	public void setPhyExam(String phyExam[]){this.phyExam = phyExam;}
+	
+	public String[] getPhyExam(){return this.phyExam;}
+	
+	public void setPhyExamResult(String phyExamResult[]){this.phyExamResult = phyExamResult;}
+	
+	public String[] getPhyExamResult(){return this.phyExamResult;}
 	
 	public PatientInfo(){
 		
@@ -58,4 +59,13 @@ public class PatientInfo {
 		this.office = office;
 		this.age = age;
 	}
+	
+	public void genPhyExam(){
+		String[] strs = new String[3];
+		strs[0] = "cough";
+		strs[1] = "haha";
+		strs[2] = "fever";
+		this.setPhyExam(strs);
+	}
+	
 }

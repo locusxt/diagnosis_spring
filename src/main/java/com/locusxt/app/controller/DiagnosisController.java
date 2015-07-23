@@ -32,7 +32,7 @@ public class DiagnosisController {
     @RequestMapping(value="/ajax/get_complaints", method = RequestMethod.GET)
 	public @ResponseBody Complaints getComplaintsJSON() {
     	Complaints complaints = new Complaints();
-    	System.out.println("complaints");
+    	//System.out.println("complaints");
     	return complaints;
 	}
     
@@ -40,7 +40,14 @@ public class DiagnosisController {
 	public @ResponseBody Complaints postBasicInfo(@RequestBody PatientInfo info) {
     	System.out.println(info.getName());
     	Complaints complaints = new Complaints();
-    	System.out.println("complaints");
+    	//System.out.println("complaints");
     	return complaints;
 	}
+    
+    @RequestMapping(value="/ajax/phy_exam", method = RequestMethod.POST)
+    public @ResponseBody PatientInfo getPhyExam(@RequestBody PatientInfo info) {
+    	System.out.println("patient info");
+    	info.genPhyExam();
+    	return info;
+    }
 }
