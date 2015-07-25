@@ -22,9 +22,16 @@
 
 			rule_symptom_list = [];
 			rule_dataobj_list = [];
+			rule_disease_list = [];
+			rule_test_list = [];
 
-			symptom_list = ['toothache', 'headache', 'cough'];
-			dataobj_priority_list = ['blood_pressure', 'temperature']
+			symptom_list = ['牙痛', '头痛', '咳嗽'];
+			symptom_list_en = ['toothache', 'headache', 'cough'];
+			dataobj_list = ['血压', '体温'];
+			dataobj_list_en = ['pressure', 'temperature'];
+			dataobj_priority_list = ['has_test_pressure', 'has_test_temperature'];
+			disease_list = ['diseaseA', 'diseaseB'];
+			test_list = ['testA', 'testB', 'testC'];
 
 
 			function tmpl_render_html(tmpl, target, d){
@@ -132,122 +139,175 @@
 							<div>
 								<form class="form-horizontal">
 									<div class="control-group row">
-										<label class="control-label col-sm-2" for="input_rule_name">规则名:</label>
+										<label class="control-label col-sm-2" for="input_rule_name"><strong>规则名:</strong></label>
 										<div class="col-sm-6">
-											<input onchange="gen_rule();" id="input_rule_name" class="form-control input-large" type="text" placeholder="输入规则名"></input>
+											<input onchange="" id="input_rule_name" class="form-control input-large" type="text" placeholder="输入规则名"></input>
 										</div>
 									</div>
 									<br />
 									<br />
 									<div class="control-group row">
-										<label class="control-label col-sm-2" >条件:</label>
+										<label class="control-label col-sm-2" ><strong>条件:</strong></label>
 										<div class="col-sm-10">
 											<div>
-												同时有以下症状:
-												<br />
+												<div>
+													同时有以下症状:
+												</div>
 												<script type="text/javascript">
 													function update_symptom(){
 														str = "";
 														for (var i = 0; i < symptom_list.length; i++){
-															str += "<option value=\"" + symptom_list[i] + "\">" + symptom_list[i] + "</option>";
+															str += "<option value=\"" + i + "\">" + symptom_list[i] + "</option>";
 														}
 														$('#symptom_select').html(str);
 													}
+
+													function add_symptom(){
+														str = "";
+														name = $('#symptom_select').val();
+														degree = $('#degree_select').val();
+														last_time1 = $('#last_time_ipt1').val();
+														last_time2 = $('#last_time_ipt2').val();
+														if (last_time1 != "" && last_time2 != "" && parseInt(last_time1) > parseInt(last_time2)){
+															alert('下界应该小于等于上界');
+															return;
+														}
+														rule_symptom_list.push([name, degree, last_time1, last_time2]);
+														update_symptom_table();
+													}
+
+													function del_symptom(id){
+														rule_symptom_list.splice(id, 1);
+														update_symptom_table();
+													}
+
+													function symptom2rstr(spt){
+														str = "";
+														if (spt[2] != "" || spt[3] != ""){
+															if (spt[2] != "" && spt[3] != ""){
+																str += "持续" + spt[2] + "~" + spt[3] + "天";
+															}
+															else if (spt[2] != ""){
+																str += "持续" + spt[2] + "天以上";
+															}
+															else if (spt[3] != ""){
+																str += "持续不足" + spt[3] + "天";
+															}
+														}
+														if (spt[1] != "unselectd"){
+															str += spt[1] + " ";
+														}
+														str += symptom_list[spt[0]];
+														return str;
+													}
+
+													function update_symptom_table(){
+														str = "<tr><th>症状描述</th><th>删除</th></tr>";
+														for (var i = 0; i < rule_symptom_list.length; ++i){
+															str += "<tr>";
+															str += "<td>";
+															str += symptom2rstr(rule_symptom_list[i]);
+															str += "</td>";
+															str += "<td>";
+															str += "<a href=\"javascript:void(0)\" onclick=\"del_symptom(" + i + ")\">删除</a>"
+															str += "</td>"
+															str += "</tr>";
+														}
+														$('#symptom_table').html(str);
+														gen_readable_rule();
+													}
 												</script>
+												<div class="row">
+													<div class="col-sm-8">
+														<table id="symptom_table" class="table table-bordered table-hover table-striped">
+															
+														</table>
+													</div>
+												</div>
+												<br />
 												<div class="control-group row">
 													<label class="control-label col-sm-2">症状名称：</label>
 													<div class="col-sm-10">
-														<select class="form-control select select-primary col-sm-4">
+														<select id="symptom_select" class="form-control select select-primary col-sm-4">
 														</select>
 													</div>
 												</div>
+												<br />
 												<div class="control-group row">
-													<label class="control-label col-sm-2">持续时间</label>
+													<label class="control-label col-sm-2">程度：</label>
+													<div class="col-sm-10">
+														<select id="degree_select" class="form-control select select-primary col-sm-4">
+															<option value="未选择">未选择</option>
+															<option value="轻度">轻度</option>
+															<option value="中度">中度</option>
+															<option value="重度">重度</option>
+														</select>
+													</div>
+												</div>
+												<br />
+												<div class="control-group row">
+													<label class="control-label col-sm-2">持续时间（天）：</label>
+													<div class="col-sm-10">
+														<div class="input-group col-sm-4">
+															<input id="last_time_ipt1" type="text" class="form-control">
+											  				<span class="input-group-addon">~</span>
+											  				<input id="last_time_ipt2" type="text" class="form-control">
+														</div>
+													</div>
+												</div>
+												<br />
+												<div class="contrpl-group row">
+													<label class="control-label col-sm-2"></label>
 													<div class="col-sm-10">
 														<div class="input-group">
-															<input id="dataipt1" type="text" class="form-control">
-											  				<span class="input-group-addon">~</span>
-											  				<input id="dataipt2"type="text" class="form-control">
+															<button onclick="add_symptom();" type="button" class="btn btn-info">添加</button>
 														</div>
 													</div>
 												</div>
 											</div>
 											<br />
+											<div class="row">
+												<div class="col-sm-8"><hr /></div>
+											</div>
 											<script type="text/javascript">
-												function update_dataobj_priority_select(){
+												function update_dataobj_name_select(){
 													str = "";
-													for (var i = 0; i < dataobj_priority_list.length; ++i){
-														str += "<option value=\"" + dataobj_priority_list[i] + "\">" + dataobj_priority_list[i] + "</option>";
+													for (var i = 0; i < dataobj_list.length; ++i){
+														str += "<option value=\"" + i + "\">" + dataobj_list[i] + "</option>";
 													}
-													$('#dataobj_priority_select').html(str);
-												}
-
-												function update_dataobj_input(){
-													data_type = $('#dataobj_type_select').val();
-													str = "";
-													if (data_type == "range"){
-														str = "<input id=\"dataipt1\" type=\"text\" class=\"form-control\">\
-											  					<span class=\"input-group-addon\">~</span>\
-											  					<input id=\"dataipt2\"type=\"text\" class=\"form-control\">";
-													}
-													else if(data_type == "lt"){
-														str = "<span class=\"input-group-addon\">&lt;</span>\
-											  					<input id=\"dataipt\" type=\"text\" class=\"form-control\">";
-													}
-													else if(data_type == "gt"){
-														str = "<span class=\"input-group-addon\">&gt;</span>\
-											  					<input id=\"dataipt\" type=\"text\" class=\"form-control\">";
-													}
-													$('#dataobj_input').html(str);
+													$('#dataobj_name_select').html(str);
 												}
 
 												function add_dataobj(){
-													new_dataobj = [];
-													priority = $('#dataobj_priority_select').val();
-													dataobj_type = $('#dataobj_type_select').val();
-													new_dataobj.push(priority);
-													new_dataobj.push(dataobj_type);
-													if (dataobj_type == "range"){
-														if ($('#dataipt1').val() == "" || $('#dataipt2').val() == ""){
-															alert("请填写完整再添加");
-															return;
-														}
-														d1 = $('#dataipt1').val();
-														d2 = $('#dataipt2').val();
-														if ( parseInt(d1) > parseInt(d2) ){
-															alert("下界应小于上界");
-															return;
-														}
-														new_dataobj.push($('#dataipt1').val());
-														new_dataobj.push($('#dataipt2').val());
+													name = $('#dataobj_name_select').val();
+													dataobj_range1 = $('#dataobj_ipt1').val();
+													dataobj_range2 = $('#dataobj_ipt2').val();
+													if (dataobj_range1 == "" && dataobj_range2 == ""){
+														alert("至少给出上界和下界中的一个");
+														return;
 													}
-													else{
-														if ($('#dataipt').val() == ""){
-															alert("请填写完成再添加");
-															return;
-														}
-														new_dataobj.push($('#dataipt').val());
+													if (dataobj_range1 != "" && dataobj_range2 != "" && parseInt(dataobj_range1) > parseInt(dataobj_range2)){
+														alert("下界应该小于等于上界");
+														return;
 													}
-													rule_dataobj_list.push(new_dataobj);
+													rule_dataobj_list.push([name, dataobj_range1, dataobj_range2]);
 													update_dataobj_table();
 												}
 
 												function dataobj2rstr(dobj){
-													str = dobj[0];
-													if (dobj[1] == "range"){
-														str += " : " + dobj[2] + " ~ " + dobj[3];
+													str = "";
+													if (dobj[1] != ""){
+														str += dobj[1] + " < ";
 													}
-													else if (dobj[1] == "lt"){
+													str += dataobj_list[dobj[0]];
+													if (dobj[2] != ""){
 														str += " < " + dobj[2];
-													}
-													else if (dobj[1] == "gt"){
-														str += " > " + dobj[2];
 													}
 													return str;
 												}
 
 												function update_dataobj_table(){
-													str = "";
+													str = "<tr><th>约束描述</th><th>删除</th></tr>";
 													for (var i = 0; i < rule_dataobj_list.length; ++i){
 														str += "<tr><td>";
 														str += dataobj2rstr(rule_dataobj_list[i]);
@@ -256,6 +316,7 @@
 														str += "</td></tr>";
 													}
 													$('#dataobj_table').html(str);
+													gen_readable_rule();
 												}
 
 												function del_dataobj(id){
@@ -265,54 +326,153 @@
 											</script>
 											<div>
 												同时满足以下条件：
-												<div id="dataobj_content">
-													<table id="dataobj_table" class="table">
-														
-													</table>
+												<div class="row">
+													<div class="col-sm-8">
+														<table id="dataobj_table" class="table table-bordered table-hover table-striped">
+															
+														</table>
+													</div>
 												</div>
 												<br />
-												<div>
-													<select id="dataobj_priority_select" class="form-control select select-primary col-sm-4">
-													</select>
-													
-													<div class="col-sm-7">
-														<select onchange="update_dataobj_input();" id="dataobj_type_select" class="form-control select select-primary col-sm-6">
-															<option value="range">范围</option>
-															<option value="gt">大于</option>
-															<option value="lt">小于</option>
+												<div class="control-group row">
+													<label class="control-label col-sm-2">
+														参数名：
+													</label>
+													<div class="col-sm-10">
+														<select id="dataobj_name_select" class="form-control select select-primary col-sm-4">
 														</select>
-														<div id="dataobj_input" class="input-group col-sm-6">
+													</div>
+												</div>
+												
+												<br />
+												<div class="control-group row">
+													<label class="control-label col-sm-2">
+														范围：
+													</label>
+													<div class="col-sm-10">
+														<div class="input-group col-sm-4">
+															<input id="dataobj_ipt1" type="text" class="form-control">
+											  				<span class="input-group-addon">~</span>
+											  				<input id="dataobj_ipt2" type="text" class="form-control">
 														</div>
 													</div>
-													<button type="button" class="btn btn-info" onclick="add_dataobj();">增加</button>
-													<script type="text/javascript">
-														update_dataobj_priority_select();
-														update_dataobj_input();
-													</script>
+												</div>
+
+												<br />
+												<div class="contrpl-group row">
+													<label class="control-label col-sm-2"></label>
+													<div class="col-sm-10">
+														<div class="input-group">
+															<button onclick="add_dataobj();" type="button" class="btn btn-info">添加</button>
+														</div>
+													</div>
 												</div>
 											</div>
 										</div>
 									</div>
 									<br />
 									<br />
+									<script type="text/javascript">
+										function update_disease_select(){
+											str = "";
+											for (var i = 0; i < disease_list.length; ++i){
+												str += "<option value=" + i + " > " + disease_list[i] + "</option>";
+											}
+											$('#disease_select').html(str);
+										}
+
+										function update_test_select(){
+											str = "";
+											for (var i = 0; i < test_list.length; ++i){
+												str += "<option value=" + i + " > " + test_list[i] + "</option>";
+											}
+											$('#test_select').html(str);
+										}
+
+										function update_possible_disease(){
+											if ($('#disease_select').val() != null)
+												rule_disease_list = $('#disease_select').val();
+											else
+												rule_disease_list = [];
+										}
+
+										function update_test(){
+											if ($('#test_select').val() != null)
+												rule_test_list = $('#test_select').val();
+											else
+												rule_test_list = [];
+										}
+									</script>
 									<div class="control-group row">
-										<label class="control-label col-sm-2" >结论:</label>
+										<label class="control-label col-sm-2" ><strong>结论:</strong></label>
 										<div class="col-sm-10">
-											<div>
-												<select id="result_priority_select" class="form-control select select-primary col-sm-4">
-												</select>
-												<select id="result_select" class="form-control select select-primary col-sm-4">
-												</select>
+											<div class="control-group row">
+												<label class="control-label col-sm-2">可能疾病：</label>
+												<div class="col-sm-10">
+													<select id="disease_select" multiple="multiple" class="form-control multiselect multiselect-primary" onchange="gen_readable_rule();">
+													</select>
+												</div>
+											</div>
+											<br />
+											<div class="control-group row">
+												<label class="control-label col-sm-2">推荐诊断：</label>
+												<div class="col-sm-10">
+													<select id="test_select" multiple="multiple" class="form-control multiselect multiselect-primary" onchange="gen_readable_rule();">
+													</select>
+												</div>
 											</div>
 										</div>
 									</div>
 									<br />
 									<br />
+									<script type="text/javascript">
+										function gen_rule(){
+											rules = [];
+
+										}
+
+										function gen_readable_rule(){
+											update_test();
+											update_possible_disease();
+
+											str = "如果 ";
+											for (var i = 0; i < rule_symptom_list.length; ++i){
+												if (i != 0) str += ", ";
+												str += symptom2rstr(rule_symptom_list[i]);												
+											}
+											if (rule_symptom_list.length != 0){
+												str += ", ";
+											}
+											for (var i = 0; i < rule_dataobj_list.length; ++i){
+												if (i != 0) str += ", ";
+												str += dataobj2rstr(rule_dataobj_list[i]);
+											}
+											str += ", 那么 ";
+											if (rule_disease_list.length != 0){
+												str += "可能患有 ";
+												for (var i = 0; i < rule_disease_list.length; ++i){
+													if (i != 0) str += "|";
+													str += disease_list[rule_disease_list[i]];
+												}
+												str += " ";
+											}
+											if (rule_test_list.length != 0){
+												str += "建议 ";
+												for (var i = 0; i < rule_test_list.length; ++i){
+													if (i != 0) str += "|";
+													str += test_list[rule_test_list[i]];
+												}
+											}
+											
+											$('#readable_rule').html(str);
+
+										}
+									</script>
 									<div class="control-group row">
-										<label class="control-label col-sm-2" >生成的规则:</label>
+										<label class="control-label col-sm-2" ><strong>生成的规则:</strong></label>
 										<div class="col-sm-10">
 											<div>
-												<p id="preview_rule"></p>
+												<p id="readable_rule"></p>
 											</div>
 										</div>
 									</div>
@@ -346,6 +506,13 @@
 			 </div>
 		</footer>
 		<script type="text/javascript">
+			update_symptom();
+			update_symptom_table();
+			update_dataobj_name_select();
+			update_dataobj_table();
+			update_disease_select();
+			update_test_select();
+
 			$(':checkbox').radiocheck();
 			$(':radio').radiocheck('check');
 			$("select").select2({dropdownCssClass: 'dropdown-inverse'});
