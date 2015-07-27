@@ -71,4 +71,8 @@ public class NewRule {
 	public NewRule(){
 		this.targetFile = "a.rules";
 	}
+	
+	public NewRule(String targetFile){
+		this.targetFile = targetFile;
+	}
 }
