@@ -31,7 +31,11 @@
 			dataobj_list_en = ['pressure', 'temperature'];
 			dataobj_priority_list = ['has_test_pressure', 'has_test_temperature'];
 			disease_list = ['diseaseA', 'diseaseB'];
+			disease_list_en = ['diseaseA', 'diseaseB'];
 			test_list = ['testA', 'testB', 'testC'];
+			test_list_en = ['testA', 'testB', 'testC'];
+			degree_list = ['未选择', '轻度', '中度', '重度'];
+			degree_list_en = ['unselected', 'light', 'medium', 'heavy'];
 
 
 			function tmpl_render_html(tmpl, target, d){
@@ -92,11 +96,11 @@
 
 			function list_rules(){
 				$.ajax( {
-					type : "get",
+					type : "GET",
 					url : "ajax/get_complaints.do",
 					dataType:"json",
 					success : function(json) {
-						chief_complaint_list = json.complaintList;
+						chief_complaint_list = json.rules;
 					}
 				});
 			}
@@ -194,8 +198,8 @@
 																str += "持续不足" + spt[3] + "天";
 															}
 														}
-														if (spt[1] != "unselectd"){
-															str += spt[1] + " ";
+														if (spt[1] != 0){
+															str += degree_list[spt[1]] + " ";
 														}
 														str += symptom_list[spt[0]];
 														return str;
@@ -237,10 +241,10 @@
 													<label class="control-label col-sm-2">程度：</label>
 													<div class="col-sm-10">
 														<select id="degree_select" class="form-control select select-primary col-sm-4">
-															<option value="未选择">未选择</option>
-															<option value="轻度">轻度</option>
-															<option value="中度">中度</option>
-															<option value="重度">重度</option>
+															<option value="0">未选择</option>
+															<option value="1">轻度</option>
+															<option value="2">中度</option>
+															<option value="3">重度</option>
 														</select>
 													</div>
 												</div>
@@ -426,9 +430,76 @@
 									<br />
 									<br />
 									<script type="text/javascript">
+										function symptom2termstr(spt){
+											str = "";
+											str += "(?p ns:hassymptomof ns:" + symptom_list_en[spt[0]] + ")";
+											if (spt[1] != 0){
+												str += "(ns:" + symptom_list_en[spt[0]] + " ns:has_degree_of ns:" + degree_list_en[spt[1]] + ")";
+											}
+											if (spt[2] != "" || spt[3] != ""){
+												str += "(ns:" + symptom_list_en[spt[0]] + " ns:has_duration_day ?time)";
+											}
+											if (spt[2] != ""){
+												str += "ge(?time " + spt[2] + ")";
+											}
+											if (spt[3] != ""){
+												str += "le(?time " + spt[3] + ")";
+											}
+											return str;
+										}
+
+										function dataobj2termstr(dobj){
+											str = "";
+											str += "(?p ns:" + dataobj_priority_list[dobj[0]] + " ?" + dataobj_list_en[dobj[0]] + ")";
+											if (dobj[1] != ""){
+												str += "ge(?" + dataobj_list_en[dobj[0]] + " " + dobj[1] + ")";
+											}
+											if (dobj[2] != ""){
+												str += "le(?" + dataobj_list_en[dobj[0]] + " " + dobj[2] + ")";
+											}
+											return str;
+										}
+
+										function disease2htermstr(dis){
+											str = "";
+											str += "(?p ns:hasdiseaseof ns:" + disease_list_en[dis] + ")";
+											return str;
+										}
+
+										function test2htermstr(test){
+											str = "";
+											str += "(?p ns:get_advice_of " + test_list_en[test] + ")";
+											return str;
+										}
+
 										function gen_rule(){
 											rules = [];
-
+											name = $('#input_rule_name').val();
+											if (name != ""){
+												name = name + ": ";
+											}
+											termsstr = "";
+											for (var i = 0; i < rule_symptom_list.length; ++i){
+												termsstr += symptom2termstr(rule_symptom_list[i]);
+											}
+											for (var i = 0; i < rule_dataobj_list.length; ++i){
+												termsstr += dataobj2termstr(rule_dataobj_list[i]);
+											}
+											for (var i = 0; i < rule_disease_list.length; ++i){
+												str = "[" + name + termsstr;
+												str += "->";
+												str += disease2htermstr(rule_disease_list[i]);
+												str += "]";
+												rules.push(str);
+											}
+											for (var i = 0; i < rule_test_list.length; ++i){
+												str = "[" + name + termsstr;
+												str += "->";
+												str += test2htermstr(rule_test_list[i]);
+												str += "]";
+												rules.push(str);
+											}
+											return rules;
 										}
 
 										function gen_readable_rule(){
@@ -520,10 +591,8 @@
 
 		</script>
 
-
         <script>
         videojs.options.flash.swf = "/SpringX/static/flat_ui/dist/js/vendors/video-js.swf";
         </script>
-
 	</body>
 </html>

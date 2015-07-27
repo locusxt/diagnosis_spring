@@ -20,6 +20,8 @@
 			var new_rule = {};
 			var new_rule_name;
 
+			current_rules = [];//目前已建的规则
+
 			rule_symptom_list = [];
 			rule_dataobj_list = [];
 			rule_disease_list = [];
@@ -96,11 +98,11 @@
 
 			function list_rules(){
 				$.ajax( {
-					type : "get",
-					url : "ajax/get_complaints.do",
+					type : "GET",
+					url : 'ajax/get_rules.do',
 					dataType:"json",
 					success : function(json) {
-						chief_complaint_list = json.complaintList;
+						current_rules = json.rules;
 					}
 				});
 			}
@@ -502,38 +504,43 @@
 											return rules;
 										}
 
+										function gen_rstr(arr1, arr2, arr3, arr4){
+											str = "如果 ";
+											for (var i = 0; i < arr1.length; ++i){
+												if (i != 0) str += ", ";
+												str += symptom2rstr(arr1[i]);					
+											}
+											if (arr1.length != 0){
+												str += ", ";
+											}
+											for (var i = 0; i < arr2.length; ++i){
+												if (i != 0) str += ", ";
+												str += dataobj2rstr(arr2[i]);
+											}
+											str += ", 那么 ";
+											if (arr3.length != 0){
+												str += "可能患有 ";
+												for (var i = 0; i < arr3.length; ++i){
+													if (i != 0) str += "|";
+													str += disease_list[arr3[i]];
+												}
+												str += " ";
+											}
+											if (arr4.length != 0){
+												str += "建议 ";
+												for (var i = 0; i < arr4.length; ++i){
+													if (i != 0) str += "|";
+													str += test_list[arr4[i]];
+												}
+											}
+											return str;
+										}
+
 										function gen_readable_rule(){
 											update_test();
 											update_possible_disease();
 
-											str = "如果 ";
-											for (var i = 0; i < rule_symptom_list.length; ++i){
-												if (i != 0) str += ", ";
-												str += symptom2rstr(rule_symptom_list[i]);												
-											}
-											if (rule_symptom_list.length != 0){
-												str += ", ";
-											}
-											for (var i = 0; i < rule_dataobj_list.length; ++i){
-												if (i != 0) str += ", ";
-												str += dataobj2rstr(rule_dataobj_list[i]);
-											}
-											str += ", 那么 ";
-											if (rule_disease_list.length != 0){
-												str += "可能患有 ";
-												for (var i = 0; i < rule_disease_list.length; ++i){
-													if (i != 0) str += "|";
-													str += disease_list[rule_disease_list[i]];
-												}
-												str += " ";
-											}
-											if (rule_test_list.length != 0){
-												str += "建议 ";
-												for (var i = 0; i < rule_test_list.length; ++i){
-													if (i != 0) str += "|";
-													str += test_list[rule_test_list[i]];
-												}
-											}
+											gen_rstr(rule_symptom_list, rule_dataobj_list, rule_disease_list, rule_test_list);
 											
 											$('#readable_rule').html(str);
 
@@ -544,6 +551,36 @@
 										<div class="col-sm-10">
 											<div>
 												<p id="readable_rule"></p>
+											</div>
+										</div>
+									</div>
+									<script type="text/javascript">
+										function gen_rule_comment(){
+											new_rule_comment = [];
+											for (var i = 0; i < rule_disease_list.length; ++i){
+												d_list = [];
+												d_list.push(rule_disease_list[i]);
+												str = gen_rstr(rule_symptom_list, rule_dataobj_list, d_list, []);
+												new_rule_comment.push(str);
+											}
+											for (var i = 0; i < rule_test_list.length; ++i){
+												t_list = [];
+												t_list.push(rule_test_list[i]);
+												str = gen_rstr(rule_symptom_list, rule_dataobj_list, [], t_list);
+												new_rule_comment.push(str);
+											}
+											return new_rule_comment;
+										}
+
+										
+									</script>
+									<div class="control-group row">
+										<label for="" class="control-label col-sm-2"></label>
+										<div class="col-sm-10">
+											<div>
+												<p>
+													<button class="btn btn-info">提交</button>
+												</p>
 											</div>
 										</div>
 									</div>

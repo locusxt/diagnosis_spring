@@ -3,11 +3,18 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.annotation.Target;
 
 public class Rules {
 	String rules[];
 	String targetFile;
+	
+	public void setRules(String rules[]){
+		this.rules = rules;
+	}
+	
+	public String[] getRules(){
+		return this.rules;
+	}
 	
 	public String[] list_rules(){
 		File file = new File(targetFile);
@@ -38,6 +45,7 @@ public class Rules {
 	
 	public Rules(){
 		this.targetFile = "rules1.rules";
+		this.rules = new String[]{"r1", "r2", "r3"};
 	}
 	
 	public Rules(String targetFile){
