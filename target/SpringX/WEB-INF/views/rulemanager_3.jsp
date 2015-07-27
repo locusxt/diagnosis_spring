@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
-    pageEncoding="utf-8"%>
+	pageEncoding="utf-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
    "http://www.w3.org/TR/html4/strict.dtd">
 
@@ -12,13 +12,15 @@
 		<link href="/SpringX/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 		<link href="/SpringX/static/flat_ui/dist/css/vendor/bootstrap.min.css" rel="stylesheet">
 		<link href="/SpringX/static/flat_ui/dist/css/flat-ui.min.css" rel="stylesheet">
-        <script src="/SpringX/static/flat_ui/dist/js/vendor/video.js"></script>
-        <!-- // <script src="/SpringX/static/flat_ui/dist/js/flat-ui.min.js"></script> -->
-        <script src="/SpringX/static/basic_js/jsrender.min.js"></script>
+		<script src="/SpringX/static/flat_ui/dist/js/vendor/video.js"></script>
+		<!-- // <script src="/SpringX/static/flat_ui/dist/js/flat-ui.min.js"></script> -->
+		<script src="/SpringX/static/basic_js/jsrender.min.js"></script>
 
 		<script type="text/javascript">
 			var new_rule = {};
 			var new_rule_name;
+
+			current_rules = [];//目前已建的规则
 
 			rule_symptom_list = [];
 			rule_dataobj_list = [];
@@ -80,27 +82,27 @@
 				str = "{\"type\":\"add\", \"rule\":\"" + new_rule + "\"}";
 				//console.log(str);
 				jQuery.ajax( {  
-		          type : 'POST',  
-		          contentType : 'application/json',  
-		          url : 'ajax/ruleManage',  
-		          data : str,  
-		          dataType : 'json',  
-		          success : function(data) {  
-		            alert("新增成功！");  
-		          },  
-		          error : function(data) {  
-		            alert("error")  
-		          }  
-		        });  
+				  type : 'POST',  
+				  contentType : 'application/json',  
+				  url : 'ajax/ruleManage',  
+				  data : str,  
+				  dataType : 'json',  
+				  success : function(data) {  
+					alert("新增成功！");  
+				  },  
+				  error : function(data) {  
+					alert("error")  
+				  }  
+				});  
 			}
 
 			function list_rules(){
 				$.ajax( {
 					type : "GET",
-					url : "ajax/get_complaints.do",
+					url : 'ajax/get_rules.do',
 					dataType:"json",
 					success : function(json) {
-						chief_complaint_list = json.rules;
+						current_rules = json.rules;
 					}
 				});
 			}
@@ -111,25 +113,25 @@
 	<body style="padding:0px; background-color:#f4f6f4">
 		<nav class="navbar navbar-inverse" role="navigation">
 			<div class="container-fluid">
-			   	<div class="navbar-header">
+				<div class="navbar-header">
 					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-				  		<span class="sr-only">Toggle navigation</span>
-				  		<span class="icon-bar"></span>
-				  		<span class="icon-bar"></span>
-				  		<span class="icon-bar"></span>
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
 					</button>
 					<a class="navbar-brand" href="/">Logo</a>
 				</div>
 				<div id="navbar" class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav navbar-left">
-                       	<li><a href="">在线问诊</a></li>
-                        <li><a href="">规则管理</a></li>
-                        <li><a href="">使用指南</a></li>
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a href="">建议</a></li>
-                        <li><a href="">关于</a></li>
-                    </ul>
+					<ul class="nav navbar-nav navbar-left">
+						<li><a href="">在线问诊</a></li>
+						<li><a href="">规则管理</a></li>
+						<li><a href="">使用指南</a></li>
+					</ul>
+					<ul class="nav navbar-nav navbar-right">
+						<li><a href="">建议</a></li>
+						<li><a href="">关于</a></li>
+					</ul>
 				</div>
 			</div>
 		</nav>
@@ -254,8 +256,8 @@
 													<div class="col-sm-10">
 														<div class="input-group col-sm-4">
 															<input id="last_time_ipt1" type="text" class="form-control">
-											  				<span class="input-group-addon">~</span>
-											  				<input id="last_time_ipt2" type="text" class="form-control">
+															<span class="input-group-addon">~</span>
+															<input id="last_time_ipt2" type="text" class="form-control">
 														</div>
 													</div>
 												</div>
@@ -356,8 +358,8 @@
 													<div class="col-sm-10">
 														<div class="input-group col-sm-4">
 															<input id="dataobj_ipt1" type="text" class="form-control">
-											  				<span class="input-group-addon">~</span>
-											  				<input id="dataobj_ipt2" type="text" class="form-control">
+															<span class="input-group-addon">~</span>
+															<input id="dataobj_ipt2" type="text" class="form-control">
 														</div>
 													</div>
 												</div>
@@ -502,38 +504,43 @@
 											return rules;
 										}
 
+										function gen_rstr(arr1, arr2, arr3, arr4){
+											str = "如果 ";
+											for (var i = 0; i < arr1.length; ++i){
+												if (i != 0) str += ", ";
+												str += symptom2rstr(arr1[i]);					
+											}
+											if (arr1.length != 0){
+												str += ", ";
+											}
+											for (var i = 0; i < arr2.length; ++i){
+												if (i != 0) str += ", ";
+												str += dataobj2rstr(arr2[i]);
+											}
+											str += ", 那么 ";
+											if (arr3.length != 0){
+												str += "可能患有 ";
+												for (var i = 0; i < arr3.length; ++i){
+													if (i != 0) str += "|";
+													str += disease_list[arr3[i]];
+												}
+												str += " ";
+											}
+											if (arr4.length != 0){
+												str += "建议 ";
+												for (var i = 0; i < arr4.length; ++i){
+													if (i != 0) str += "|";
+													str += test_list[arr4[i]];
+												}
+											}
+											return str;
+										}
+
 										function gen_readable_rule(){
 											update_test();
 											update_possible_disease();
 
-											str = "如果 ";
-											for (var i = 0; i < rule_symptom_list.length; ++i){
-												if (i != 0) str += ", ";
-												str += symptom2rstr(rule_symptom_list[i]);												
-											}
-											if (rule_symptom_list.length != 0){
-												str += ", ";
-											}
-											for (var i = 0; i < rule_dataobj_list.length; ++i){
-												if (i != 0) str += ", ";
-												str += dataobj2rstr(rule_dataobj_list[i]);
-											}
-											str += ", 那么 ";
-											if (rule_disease_list.length != 0){
-												str += "可能患有 ";
-												for (var i = 0; i < rule_disease_list.length; ++i){
-													if (i != 0) str += "|";
-													str += disease_list[rule_disease_list[i]];
-												}
-												str += " ";
-											}
-											if (rule_test_list.length != 0){
-												str += "建议 ";
-												for (var i = 0; i < rule_test_list.length; ++i){
-													if (i != 0) str += "|";
-													str += test_list[rule_test_list[i]];
-												}
-											}
+											gen_rstr(rule_symptom_list, rule_dataobj_list, rule_disease_list, rule_test_list);
 											
 											$('#readable_rule').html(str);
 
@@ -547,6 +554,54 @@
 											</div>
 										</div>
 									</div>
+									<script type="text/javascript">
+										function gen_rule_comment(){
+											new_rule_comment = [];
+											for (var i = 0; i < rule_disease_list.length; ++i){
+												d_list = [];
+												d_list.push(rule_disease_list[i]);
+												str = gen_rstr(rule_symptom_list, rule_dataobj_list, d_list, []);
+												new_rule_comment.push(str);
+											}
+											for (var i = 0; i < rule_test_list.length; ++i){
+												t_list = [];
+												t_list.push(rule_test_list[i]);
+												str = gen_rstr(rule_symptom_list, rule_dataobj_list, [], t_list);
+												new_rule_comment.push(str);
+											}
+											return new_rule_comment;
+										}
+
+										function post_new_rule(){
+											arr1 = gen_rule();
+											arr2 = gen_rule_comment();
+											console.log(arr1);
+											console.log(arr2);
+											jQuery.ajax( {
+												type : 'POST',
+												contentType : 'application/json',
+												url : 'ajax/post_new_rule',
+												data : JSON.stringify ({rules:arr1, comments:arr2}),
+												dataType : 'json',
+												success : function(data) {
+													alert("新增成功！");
+												},
+												error : function(data) {
+													alert("error");
+												}
+											});  
+										}
+									</script>
+									<div class="control-group row">
+										<label for="" class="control-label col-sm-2"></label>
+										<div class="col-sm-10">
+											<div>
+												<p>
+													<button class="btn btn-info">提交</button>
+												</p>
+											</div>
+										</div>
+									</div>
 								</form>
 							</div>
 							<br />
@@ -557,16 +612,16 @@
 		</div>
 
 		<!-- /.container -->
-        <!--script src="/SpringX/static/flat_ui/dist/js/vendor/jquery.min.js"></script-->
-        <script src="/SpringX/static/flat_ui/dist/js/flat-ui.min.js"></script>
-        <script src="/SpringX/static/flat_ui/docs/assets/js/application.js"></script>
-        <script src="/SpringX/static/flat_ui/js/jquery-ui-1.10.0.custom.min.js"></script>
-        <script src="/SpringX/static/flat_ui/js/jquery.dropkick-1.0.0.js"></script>
-        <script src="/SpringX/static/flat_ui/js/custom_checkbox_and_radio.js"></script>
-        <script src="/SpringX/static/flat_ui/js/custom_radio.js"></script>
-        <!-- <script src="/SpringX/static/flat_ui/js/bootstrap-tooltip.js"></script> -->
-        <script src="/SpringX/static/flat_ui/js/jquery.tagsinput.js"></script>
-        
+		<!--script src="/SpringX/static/flat_ui/dist/js/vendor/jquery.min.js"></script-->
+		<script src="/SpringX/static/flat_ui/dist/js/flat-ui.min.js"></script>
+		<script src="/SpringX/static/flat_ui/docs/assets/js/application.js"></script>
+		<script src="/SpringX/static/flat_ui/js/jquery-ui-1.10.0.custom.min.js"></script>
+		<script src="/SpringX/static/flat_ui/js/jquery.dropkick-1.0.0.js"></script>
+		<script src="/SpringX/static/flat_ui/js/custom_checkbox_and_radio.js"></script>
+		<script src="/SpringX/static/flat_ui/js/custom_radio.js"></script>
+		<!-- <script src="/SpringX/static/flat_ui/js/bootstrap-tooltip.js"></script> -->
+		<script src="/SpringX/static/flat_ui/js/jquery.tagsinput.js"></script>
+		
 		<footer class="footer">
 			 <div class="container">
 				<div class="row footer-bottom">
@@ -591,8 +646,8 @@
 
 		</script>
 
-        <script>
-        videojs.options.flash.swf = "/SpringX/static/flat_ui/dist/js/vendors/video-js.swf";
-        </script>
+		<script>
+		videojs.options.flash.swf = "/SpringX/static/flat_ui/dist/js/vendors/video-js.swf";
+		</script>
 	</body>
 </html>
