@@ -38,6 +38,7 @@ public class RuleController {
 	@RequestMapping(value = "ajax/post_new_rule", method = RequestMethod.POST)
 	public @ResponseBody ResponseMsg postNewRule(@RequestBody NewRule newRule){
 		System.out.println(newRule.getRules()[0]);
+		newRule.save();
 		return new ResponseMsg("ok");
 	}
 }
