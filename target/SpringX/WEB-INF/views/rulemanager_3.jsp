@@ -617,14 +617,66 @@
 									  type: 'POST',
 									  url: "ajax/get_rules",
 									  data: JSON.stringify (json), // or JSON.stringify ({name: 'jonas'}),
-									  success: function(d) { console.log(d); },
+									  success: function(d) { console.log(d);},
 									  contentType: "application/json",
 									  dataType: 'json'
 									});
 								}
+
+								function change_index(id){
+									choosed_index = id;
+									$('li.active').removeClass("active");
+									$('#index' + id).addClass("active");
+									json = {};
+									json.partId = (id - 1) * 10 + 1;
+									json.partSize = 10;
+									$.ajax({
+									  type: 'POST',
+									  url: "ajax/get_rules",
+									  data: JSON.stringify (json), // or JSON.stringify ({name: 'jonas'}),
+									  success: function(d) { console.log(d);},
+									  contentType: "application/json",
+									  dataType: 'json'
+									});
+								}
+
+								start_index = 1;
+								choosed_index = 1;
+
+								function update_index(delta){
+									str = "";
+									if (start_index + delta > 0){
+										start_index += delta;
+									}
+									str += "<li class=\"previous\">\
+								    			<a href=\"javascript:;\" onclick=\"update_index(-1);\">Previous</a>\
+								  			</li>";
+								  	for (var i = 0; i < 10; ++i){
+								  		tmp = start_index + i;
+								  		str += "<li id=\"index" + tmp + "\">\
+								  					<a href=\"javascript:;\" onclick=\"change_index(" + tmp + ")\">" + tmp + "</a>\
+								  				</li>";
+								  	}
+								  	str += "<li class=\"next\">\
+								    			<a href=\"javascript:;\" onclick=\"update_index(1);\">Newer</a>\
+								  			</li>";
+								  	$('#index_list').html(str);
+
+								  	if (choosed_index + delta > 0){
+								  		choosed_index += delta;
+								  		//change_index(choosed_index);
+								  	}
+								}
 							</script>
 							<div>
-								
+								<table class="table" id="rules_table">
+									
+								</table>
+								<ul class="pagination-plain" id="index_list">
+								</ul>
+								<script type="text/javascript">
+									update_index(0);
+								</script>
 							</div>
 						</div>
 					</div>

@@ -47,6 +47,8 @@ public class Rules {
 	}
 	
 	public void updateRules(int partId, int partSize){
+		System.out.println(partId);
+		System.out.println(partSize);
 		this.partId = partId;
 		this.partSize = partSize;
 		File f1 = new File(targetFile);
@@ -58,17 +60,20 @@ public class Rules {
 			LineNumberReader lnr2 = new LineNumberReader(fr2);
 			
 			String str1 = null, str2 = null;
-			lnr1.setLineNumber(partId);
-			lnr2.setLineNumber(partId);
+			lnr1.setLineNumber(1);
+			lnr2.setLineNumber(1);
 			
 			List <String> list1 = new ArrayList<String>();
 			List <String> list2 = new ArrayList<String>();
 			while ((str1 = lnr1.readLine()) != null){
 				str2 = lnr2.readLine();
-				list1.add(str1);
-				list2.add(str2);
-				System.out.println(str1 + " //" + str2);
-				if (lnr1.getLineNumber() > partId + partSize){
+				int num = lnr1.getLineNumber();
+				if (num >= partId && num <= partId + partSize - 1){
+					list1.add(str1);
+					list2.add(str2);
+					System.out.println(lnr1.getLineNumber() + ":" +  str1 + " //" + str2);
+				}
+				if (num >= partId + partSize){
 					break;
 				}
 			}
