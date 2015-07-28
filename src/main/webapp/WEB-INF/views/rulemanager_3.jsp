@@ -573,9 +573,24 @@
 											return new_rule_comment;
 										}
 
+										function check_rule(){
+											if (rule_symptom_list.length == 0 && rule_dataobj_list.length == 0){
+												alert('请填写完整');
+												return false;
+											}
+											if (rule_disease_list.length == 0 && rule_test_list.length == 0){
+												alert('请填写完整');
+												return false;
+											}
+											return true;
+										}
+
 										function post_new_rule(){
 											arr1 = gen_rule();
 											arr2 = gen_rule_comment();
+											if (check_rule() == false){
+												return;
+											}
 											console.log(arr1);
 											console.log(arr2);
 											jQuery.ajax( {
@@ -585,7 +600,7 @@
 												data : JSON.stringify ({rules:arr1, comments:arr2}),
 												dataType : 'json',
 												success : function(data) {
-													alert("新增成功！");
+													window.location.href="";
 												},
 												error : function(data) {
 													alert("error");
@@ -598,7 +613,7 @@
 										<div class="col-sm-10">
 											<div>
 												<p>
-													<button class="btn btn-info">提交</button>
+													<button type="button" onclick="post_new_rule();" class="btn btn-info">提交</button>
 												</p>
 											</div>
 										</div>
