@@ -21,6 +21,7 @@
 			var new_rule_name;
 
 			current_rules = [];//目前已建的规则
+			current_comments = [];
 
 			rule_symptom_list = [];
 			rule_dataobj_list = [];
@@ -623,6 +624,14 @@
 									});
 								}
 
+								function update_rules_table(){
+									str = "";
+									for (var i = 0; i < current_comments.length; ++i){
+										str += "<tr><td>" + current_comments[i] + "</td></tr>";
+									}
+									$('#rules_table').html(str);
+								}
+
 								function change_index(id){
 									choosed_index = id;
 									$('li.active').removeClass("active");
@@ -634,7 +643,11 @@
 									  type: 'POST',
 									  url: "ajax/get_rules",
 									  data: JSON.stringify (json), // or JSON.stringify ({name: 'jonas'}),
-									  success: function(d) { console.log(d);},
+									  success: function(d) {
+									  		current_rules = d.rules;
+									  		current_comments = d.comments;
+									  		update_rules_table();
+									  	},
 									  contentType: "application/json",
 									  dataType: 'json'
 									});
@@ -664,12 +677,12 @@
 
 								  	if (choosed_index + delta > 0){
 								  		choosed_index += delta;
-								  		//change_index(choosed_index);
+								  		change_index(choosed_index);
 								  	}
 								}
 							</script>
-							<div>
-								<table class="table" id="rules_table">
+							<div class="col-sm-8 col-sm-offset-2">
+								<table class="table table-bordered table-hover table-striped" id="rules_table">
 									
 								</table>
 								<ul class="pagination-plain" id="index_list">
