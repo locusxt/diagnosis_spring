@@ -21,6 +21,7 @@
 			var new_rule_name;
 
 			current_rules = [];//目前已建的规则
+			current_comments = [];
 
 			rule_symptom_list = [];
 			rule_dataobj_list = [];
@@ -76,24 +77,6 @@
 				  contentType: "application/json",
 				  dataType: 'json'
 				});
-			}
-
-			function add_rule(new_rule){
-				str = "{\"type\":\"add\", \"rule\":\"" + new_rule + "\"}";
-				//console.log(str);
-				jQuery.ajax( {  
-				  type : 'POST',  
-				  contentType : 'application/json',  
-				  url : 'ajax/ruleManage',  
-				  data : str,  
-				  dataType : 'json',  
-				  success : function(data) {  
-					alert("新增成功！");  
-				  },  
-				  error : function(data) {  
-					alert("error")  
-				  }  
-				});  
 			}
 
 			function list_rules(){
@@ -572,9 +555,24 @@
 											return new_rule_comment;
 										}
 
+										function check_rule(){
+											if (rule_symptom_list.length == 0 && rule_dataobj_list.length == 0){
+												alert('请填写完整');
+												return false;
+											}
+											if (rule_disease_list.length == 0 && rule_test_list.length == 0){
+												alert('请填写完整');
+												return false;
+											}
+											return true;
+										}
+
 										function post_new_rule(){
 											arr1 = gen_rule();
 											arr2 = gen_rule_comment();
+											if (check_rule() == false){
+												return;
+											}
 											console.log(arr1);
 											console.log(arr2);
 											jQuery.ajax( {
@@ -584,7 +582,7 @@
 												data : JSON.stringify ({rules:arr1, comments:arr2}),
 												dataType : 'json',
 												success : function(data) {
-													alert("新增成功！");
+													window.location.href="";
 												},
 												error : function(data) {
 													alert("error");
@@ -597,7 +595,7 @@
 										<div class="col-sm-10">
 											<div>
 												<p>
-													<button class="btn btn-info">提交</button>
+													<button type="button" onclick="post_new_rule();" class="btn btn-info">提交</button>
 												</p>
 											</div>
 										</div>
@@ -623,18 +621,35 @@
 									});
 								}
 
+								function del_rule(rule_id){
+									json = {};
+									json.
+								}
+
+								function update_rules_table(){
+									str = "";
+									for (var i = 0; i < current_comments.length; ++i){
+										str += "<tr><td>" + current_comments[i] + "</td></tr>";
+									}
+									$('#rules_table').html(str);
+								}
+
 								function change_index(id){
 									choosed_index = id;
 									$('li.active').removeClass("active");
 									$('#index' + id).addClass("active");
 									json = {};
-									json.partId = (id - 1) * 10 + 1;
+									json.partId = (id - 1) * 10 + 3;
 									json.partSize = 10;
 									$.ajax({
 									  type: 'POST',
 									  url: "ajax/get_rules",
 									  data: JSON.stringify (json), // or JSON.stringify ({name: 'jonas'}),
-									  success: function(d) { console.log(d);},
+									  success: function(d) {
+									  		current_rules = d.rules;
+									  		current_comments = d.comments;
+									  		update_rules_table();
+									  	},
 									  contentType: "application/json",
 									  dataType: 'json'
 									});
@@ -664,12 +679,12 @@
 
 								  	if (choosed_index + delta > 0){
 								  		choosed_index += delta;
-								  		//change_index(choosed_index);
+								  		change_index(choosed_index);
 								  	}
 								}
 							</script>
-							<div>
-								<table class="table" id="rules_table">
+							<div class="col-sm-8 col-sm-offset-2">
+								<table class="table table-bordered table-hover table-striped" id="rules_table">
 									
 								</table>
 								<ul class="pagination-plain" id="index_list">

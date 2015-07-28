@@ -79,24 +79,6 @@
 				});
 			}
 
-			function add_rule(new_rule){
-				str = "{\"type\":\"add\", \"rule\":\"" + new_rule + "\"}";
-				//console.log(str);
-				jQuery.ajax( {  
-				  type : 'POST',  
-				  contentType : 'application/json',  
-				  url : 'ajax/ruleManage',  
-				  data : str,  
-				  dataType : 'json',  
-				  success : function(data) {  
-					alert("新增成功！");  
-				  },  
-				  error : function(data) {  
-					alert("error")  
-				  }  
-				});  
-			}
-
 			function list_rules(){
 				$.ajax( {
 					type : "GET",
@@ -637,6 +619,10 @@
 									  contentType: "application/json",
 									  dataType: 'json'
 									});
+								}
+
+								function del_rule(rule_id){
+									json = {};
 								}
 
 								function update_rules_table(){

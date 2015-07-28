@@ -19,13 +19,6 @@ public class RuleController {
 	public String diagnosis(ModelMap model) {
 		return "rulemanager_3";
 	}
-
-	@RequestMapping(value = "/ajax/ruleManage", method = RequestMethod.POST)
-	public @ResponseBody ResponseMsg manageRule(@RequestBody RuleMsg msg) {
-		System.out.println(msg.getType());
-		System.out.println(msg.getRule());
-		return new ResponseMsg("ok");
-	}
 	
 	@RequestMapping(value = "/ajax/get_rules", method = RequestMethod.POST)
 	public @ResponseBody Rules getRules(@RequestBody Rules rules){
@@ -33,7 +26,7 @@ public class RuleController {
 		return rules;
 	}
 	
-	@RequestMapping(value = "ajax/post_new_rule", method = RequestMethod.POST)
+	@RequestMapping(value = "/ajax/post_new_rule", method = RequestMethod.POST)
 	public @ResponseBody ResponseMsg postNewRule(@RequestBody NewRule newRule){
 		System.out.println(newRule.getRules()[0]);
 		newRule.save();
