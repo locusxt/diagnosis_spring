@@ -1,7 +1,5 @@
 package com.locusxt.app.controller;
 
-import java.io.Console;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,9 +27,9 @@ public class RuleController {
 		return new ResponseMsg("ok");
 	}
 	
-	@RequestMapping(value = "/ajax/get_rules", method = RequestMethod.GET)
-	public @ResponseBody Rules getRules(){
-		Rules rules = new Rules();
+	@RequestMapping(value = "/ajax/get_rules", method = RequestMethod.POST)
+	public @ResponseBody Rules getRules(@RequestBody Rules rules){
+		rules.updateRules(rules.getPartId(), rules.getPartSize());
 		return rules;
 	}
 	

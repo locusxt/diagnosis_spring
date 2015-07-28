@@ -606,6 +606,27 @@
 							</div>
 							<br />
 						</div>
+						<div class="bs-docs-section">
+							<h4 class="page-header">浏览规则</h4>
+							<script type="text/javascript">
+								function get_rules(partId){
+									json = {};
+									json.partId = partId;
+									json.partSize = 10;
+									$.ajax({
+									  type: 'POST',
+									  url: "ajax/get_rules",
+									  data: JSON.stringify (json), // or JSON.stringify ({name: 'jonas'}),
+									  success: function(d) { console.log(d); },
+									  contentType: "application/json",
+									  dataType: 'json'
+									});
+								}
+							</script>
+							<div>
+								
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

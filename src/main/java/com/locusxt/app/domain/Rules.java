@@ -46,7 +46,7 @@ public class Rules {
 		return this.partSize;
 	}
 	
-	public void get_rules(int partId, int partSize){
+	public void updateRules(int partId, int partSize){
 		this.partId = partId;
 		this.partSize = partSize;
 		File f1 = new File(targetFile);
@@ -74,6 +74,8 @@ public class Rules {
 			}
 			this.rules = list1.toArray(new String[0]);
 			this.comments = list2.toArray(new String[0]);
+			lnr1.close();
+			lnr2.close();
 		}
 		catch(IOException e){
 			e.printStackTrace();
@@ -100,7 +102,7 @@ public class Rules {
 					reader.close();
 				}
 				catch (IOException e1){
-					
+					e1.printStackTrace();
 				}
 			}
 		}
@@ -118,7 +120,7 @@ public class Rules {
 	
 	public static void main(String[] args){
 		Rules r = new Rules("a.rules");
-		r.get_rules(0, 10);
+		r.updateRules(0, 10);
 		
 	}
 }
