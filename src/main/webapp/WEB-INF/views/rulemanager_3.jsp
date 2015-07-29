@@ -634,20 +634,26 @@
 										type : "POST",
 										url : "ajax/del_rule",
 										data : JSON.stringify (json),
-										success : function(d){console.log(d);},
+										success : function(d){
+											console.log(d);
+											update_index(0);
+										},
 										contentType : "application/json",
 										dataType : 'json'
 									});
 								}
 
 								function update_rules_table(){
-									str = "";
+									str = "<tr><th>规则</th><th>删除</th></tr>";
 									for (var i = 0; i < current_comments.length; ++i){
 										str += "<tr><td>";
 										str += current_comments[i];
 										str += "</td><td>";
 										str += "<a href=\"javascript:void(0)\" onclick=\"del_rule(" + ((choosed_index-1) * 10 + 3 + i) + "," + i + ");\">删除</a>";
 										str += "</td></tr>";
+									}
+									for (i = current_comments.length - 1; i < 10; ++i){
+										str += "<tr><td>&nbsp;</td><td></td></tr>";
 									}
 									$('#rules_table').html(str);
 								}
