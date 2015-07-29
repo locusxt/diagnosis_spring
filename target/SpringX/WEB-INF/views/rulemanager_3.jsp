@@ -621,15 +621,33 @@
 									});
 								}
 
-								function del_rule(rule_id){
+								start_index = 1;
+								choosed_index = 1;
+
+								function del_rule(rule_id, i){
 									json = {};
-									json.
+									json.rule = current_rules[i];
+									json.ruleId = rule_id;
+									console.log(rule_id);
+									console.log(current_rules[i]);
+									$.ajax({
+										type : "POST",
+										url : "ajax/del_rule",
+										data : JSON.stringify (json),
+										success : function(d){console.log(d);},
+										contentType : "application/json",
+										dataType : 'json'
+									});
 								}
 
 								function update_rules_table(){
 									str = "";
 									for (var i = 0; i < current_comments.length; ++i){
-										str += "<tr><td>" + current_comments[i] + "</td></tr>";
+										str += "<tr><td>";
+										str += current_comments[i];
+										str += "</td><td>";
+										str += "<a href=\"javascript:void(0)\" onclick=\"del_rule(" + ((choosed_index-1) * 10 + 3 + i) + "," + i + ");\">删除</a>";
+										str += "</td></tr>";
 									}
 									$('#rules_table').html(str);
 								}
@@ -654,9 +672,6 @@
 									  dataType: 'json'
 									});
 								}
-
-								start_index = 1;
-								choosed_index = 1;
 
 								function update_index(delta){
 									str = "";

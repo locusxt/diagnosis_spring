@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.locusxt.app.domain.DelRule;
 import com.locusxt.app.domain.NewRule;
 import com.locusxt.app.domain.ResponseMsg;
 import com.locusxt.app.domain.RuleMsg;
@@ -30,6 +31,12 @@ public class RuleController {
 	public @ResponseBody ResponseMsg postNewRule(@RequestBody NewRule newRule){
 		System.out.println(newRule.getRules()[0]);
 		newRule.save();
+		return new ResponseMsg("ok");
+	}
+	
+	@RequestMapping(value = "/ajax/del_rule", method = RequestMethod.POST)
+	public @ResponseBody ResponseMsg postNewRule(@RequestBody DelRule delRule){
+		delRule.delete();
 		return new ResponseMsg("ok");
 	}
 }
