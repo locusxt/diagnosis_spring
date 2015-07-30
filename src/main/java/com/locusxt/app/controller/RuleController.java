@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.locusxt.app.domain.DelRule;
 import com.locusxt.app.domain.NewRule;
 import com.locusxt.app.domain.ResponseMsg;
-import com.locusxt.app.domain.RuleMsg;
 import com.locusxt.app.domain.Rules;
 
 @Controller
