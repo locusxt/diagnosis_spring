@@ -23,9 +23,16 @@
 			patient_info.complaint = [];
 			patient_info.complaint_time = [];
 			patient_info.complaint_degree = [];
+			patient_info.recommend_phy_exam = [];
 			patient_info.phy_exam = [];
 			patient_info.phy_exam_result = [];
 
+			patient_info.recommend_test = [];
+			patient_info.test = [];
+			patient_info.test_result = [];
+
+			patient_info.possible_disease = [];
+			patient_info.advice = [];
 
 			degree_list = ['未选择', '轻度', '中度', '重度'];
 			degree_list_en = ['unselected', 'light', 'medium', 'heavy'];
@@ -264,49 +271,112 @@
 						<script type="text/javascript">
 							function update_phy_exam_table(){
 								str = "";
-								for (var i = 0; i < patient_info['phy_exam'].length; i++){
-									str += "<div class=\"control-group row\">\
-												<label class=\"control-label col-md-2\">\
-													<strong>" + patient_info['phy_exam'][i] + "</strong>\
-												</label>\
-												<div class=\"col-md-8\">\
-													<input id=\"phy" + i + "\" class=\"form-control input-large\" type=\"text\"></input>\
-												</div>\
-											</div>";
+								for (var i = 0; i < patient_info.phy_exam.length; i++){
+									str += "<tr>\
+												<td>" + patient_info.phy_exam[i] + "</td>\
+												<td> <input id=\"phy" + i + "\" class=\"form-control input-large\" type=text></input> </td>\
+											</tr>";
 								}
 								$('#phy_exam_content').html(str);
+							}
+
+							function update_phy_exam_result(){
+								for (var i = 0; i < patient_info.phy_exam.length; i++){
+									patient_info.phy_exam_result[i] = $('#phy' + i).val();
+								}
 							}
 						</script>
 
 						<div id="phy_exam_section" class="bs-docs-section row">
 							<h4 id="phy_exam_title" class="page-header">体格检查</h4>
-							<div id="phy_exam_content" class="col-sm-offset-1">
-								
+							<div class="row">
+								<div class="col-sm-offset-2 col-sm-8">
+									<table id="phy_exam_content" class="table table-bordered">
+										
+									</table>
+								</div>
 							</div>
 							<br />
-							<div class="col-sm-offset-1">
-  								<button type="button" class="btn btn-info" onclick="">更新</button>
+							<div class="row">
+								<div class="col-sm-offset-3">
+	  								<button type="button" class="btn btn-info" onclick="">更新</button>
+								</div>
 							</div>
 						</div>
+	
+						<script type="text/javascript">
+							function update_test_table(){
+								str = "";
+								for (var i = 0; i < patient_info.test.length; i++){
+									str += "<tr>\
+												<td>" + patient_info.test[i] + "</td>\
+												<td> <input id=\"test" + i + "\" class=\"form-control input-large\" type=text></input> </td>\
+											</tr>";
+								}
+								$('#test_content').html(str);
+							}
 
-						<div id="recommend_exam_section" class="bs-docs-section row">
-							<h4 id="recommend_exam_title" class="page-header">推荐检查</h4>
-							<div class="col-sm-offset-1">
-
+							function update_test_result(){
+								for (var i = 0; i < patient_info.test.length; i++){
+									patient_info.test_result[i] = $('#test' + i).val();
+								}
+							}
+						</script>
+						<div id="test_section" class="bs-docs-section row">
+							<h4 id="test_title" class="page-header">推荐检查</h4>
+							<div class="row">
+								<div class="col-sm-offset-2 col-sm-8">
+									<table id="test_content" class="table table-bordered">
+										
+									</table>
+								</div>
+							</div>
+							<br />
+							<div class="row">
+								<div class="col-sm-offset-3">
+	  								<button type="button" class="btn btn-info" onclick="">更新</button>
+								</div>
 							</div>
 						</div>
-
+						
+						<script type="text/javascript">
+							function update_disease_table(){
+								str = "";
+								for (var i = 0; i < patient_info.possible_disease.length; ++i){
+									str += "<tr>\
+												<td>" + patient_info.possible_disease[i] + "</td>\
+											</tr>";
+								}
+								$('#disease_table').html(str);
+							}
+						</script>
 						<div id="diagnosis_result_section" class="bs-docs-section row">
 							<h4 id="diagnosis_result_title" class="page-header">初步诊断结果</h4>
 							<div class="col-sm-offset-1">
-
+								<table id="disease_table" class="table">
+									
+								</table>
 							</div>
 						</div>
+
+						<script type="text/javascript">
+							function update_advice_table(){
+								str = "";
+								for (var i = 0; i < patient_info.advice.length; ++i){
+									str += "<tr>\
+												<td>" + patient_info.advice[i] + "</td>\
+											</tr>";
+								}
+								$('#advice_table').html(str);
+							}
+						</script>
 
 						<div id="solution_section" class="bs-docs-section row">
 							<h4 id="solution_title" class="page-header">处理意见</h4>
 							<div class="col-sm-offset-1">
-
+								<table id="advice_table" class="table">
+									
+								</table>
 							</div>
 						</div>
 					</div>
