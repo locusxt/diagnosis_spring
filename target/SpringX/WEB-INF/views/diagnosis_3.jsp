@@ -218,6 +218,13 @@
 									<option value="2">一月</option>
 									<option value="3">几个月</option>
   								</select>
+  								&nbsp;&nbsp;
+  								<select id="input_chief_complaint_degree" class="form-control select select-primary select-block mbl">
+									<option value="0">一两天</option>
+									<option value="1">一周</option>
+									<option value="2">一月</option>
+									<option value="3">几个月</option>
+  								</select>
   								&nbsp;&nbsp;&nbsp;&nbsp;
   								<button type="button" class="btn btn-info" onclick="add_chief_complaint();">添加</button>
 							</div>

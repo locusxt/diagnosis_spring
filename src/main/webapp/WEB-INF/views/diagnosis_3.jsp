@@ -19,12 +19,16 @@
 		<script type="text/javascript">
 			var patient_info = {};
 			var chief_complaint_list = [];
-			var chief_complaint_last_time = ["一两天", "一周", "一个月", "几个月"];
 
 			patient_info.complaint = [];
 			patient_info.complaint_time = [];
+			patient_info.complaint_degree = [];
 			patient_info.phy_exam = [];
 			patient_info.phy_exam_result = [];
+
+
+			degree_list = ['未选择', '轻度', '中度', '重度'];
+			degree_list_en = ['unselected', 'light', 'medium', 'heavy'];
 
 			function tmpl_render_html(tmpl, target, d){
 				var html = $(tmpl).render(d);
@@ -168,25 +172,29 @@
 						<script type="text/javascript">
 						function add_chief_complaint(){
 							patient_info.complaint.push(chief_complaint_list[$('#input_chief_complaint').val()]);
-							patient_info.complaint_time.push(chief_complaint_last_time[$('#input_chief_complaint_time').val()]);
+							patient_info.complaint_time.push($('#input_chief_complaint_time').val());
+							patient_info.complaint_degree.push($('#input_chief_complaint_degree').val());
 							update_chief_complaint_table();
 						}
 
 						function del_chief_complaint(id){
 							patient_info.complaint.splice(id, 1);
 							patient_info.complaint_time.splice(id, 1);
+							patient_info.complaint_degree.splice(id, 1);
 							update_chief_complaint_table();
 						}
 
 						function update_chief_complaint_table(){
 							str = "<tr>\
 									<th>症状</th>\
+									<th>程度</th>\
 									<th>持续时间</th>\
 									<th>删除</th>\
 								   </th>";
 							for (var i = 0; i < patient_info.complaint.length; i++){
 								str += "<tr>\
 											<td>" + patient_info.complaint[i] + "</td>\
+											<td>" + degree_list[patient_info.complaint_degree[i]] + "</td>\
 											<td>" + patient_info.complaint_time[i] + "</td>\
 											<td> <a href=\"javascript:void(0)\" onclick=\"del_chief_complaint(" + i + ");\">delete</a></td>\
 										</tr>";
@@ -209,17 +217,43 @@
 						<div id="chief_complaint_section" class="bs-docs-section row">
 							<h4 id="chief_complaint_title" class="page-header">主诉</h4>
 							<div class="col-sm-offset-1">
-								<select id="input_chief_complaint" class="form-control select select-primary select-block mbl">
-  								</select>
-  								&nbsp;&nbsp;
-  								<select id="input_chief_complaint_time" class="form-control select select-primary select-block mbl">
-									<option value="0">一两天</option>
-									<option value="1">一周</option>
-									<option value="2">一月</option>
-									<option value="3">几个月</option>
-  								</select>
-  								&nbsp;&nbsp;&nbsp;&nbsp;
-  								<button type="button" class="btn btn-info" onclick="add_chief_complaint();">添加</button>
+								<form class="form-horizontal">
+									<div class="control-group row">
+										<label class="control-label col-sm-2">症状：</label>
+										<div class="col-sm-10">
+											<select id="input_chief_complaint" class="form-control select select-primary select-block mbl">
+			  								</select>
+		  								</div>
+									</div>
+
+	  								<div class="control-group row">
+	  									<label class="control-label col-sm-2">严重程度：</label>
+										<div class="col-sm-10">
+		  									<select id="input_chief_complaint_degree" class="form-control select select-primary select-block mbl">
+												<option value="0">未选择</option>
+												<option value="1">轻度</option>
+												<option value="2">中度</option>
+												<option value="3">重度</option>
+			  								</select>
+										</div>
+	  								</div>
+
+	  								<div class="control-group row">
+	  									<label class="control-label col-sm-2">持续时间：</label>
+	  									<div class="col-sm-4">
+		  									<input id="input_chief_complaint_time" class="form-control input-large" type="text" placeholder="持续时间（天）"></input>
+	  									</div>
+	  								</div>
+	  								<br />
+	  								
+	  								<div class="control-group row">
+	  									<label class="control-label col-sm-2"></label>
+	  									<div class="col-sm-10">
+	  										<button type="button" class="btn btn-info" onclick="add_chief_complaint();">添加</button>
+	  									</div>
+	  								</div>
+	  								<br />
+								</form>
 							</div>
 							<div class="col-sm-offset-1 col-sm-9">
 								<table id="chief_complaint_table" class="table">

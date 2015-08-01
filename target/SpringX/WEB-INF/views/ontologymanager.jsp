@@ -15,11 +15,53 @@
 		<script src="/SpringX/static/flat_ui/dist/js/vendor/video.js"></script>
 		<!-- // <script src="/SpringX/static/flat_ui/dist/js/flat-ui.min.js"></script> -->
 		<script src="/SpringX/static/basic_js/jsrender.min.js"></script>
-
-		<script src="/SpringX/static/jstree/dist/jstree.min.js"></script>
+		
+		<!-- <link rel="stylesheet" type="text/css" href="/SpringX/static/zTree/css/zTreeStyle/zTreeStyle.css"> -->
+		<link rel="stylesheet" type="text/css" href="/SpringX/static/zTree/css/metroStyle/metroStyle.css">
+		<script src="/SpringX/static/zTree/js/jquery.ztree.all-3.5.min.js"></script>
 
 		<script type="text/javascript">
-			
+			var setting = {
+				showLine: true,
+				data:{
+					simpleData:{
+						enable : true
+					}
+				},
+				edit:{
+					enable:true
+				},
+				view:{
+					showIcon:false,
+					addHoverDom: addHoverDom,
+					removeHoverDom: removeHoverDom
+				}
+			};
+			var nodes = [
+				{id:1, pId:0, name:"root"},
+				{id:11, pId:1, name:"疾病"},
+				{id:12, pId:1, name:"症状"},
+				{id:111, pId:11, name:"感冒"}
+			];
+
+			var treeA;
+			var newCount = 1;
+			function addHoverDom(treeId, treeNode) {
+				var sObj = $("#" + treeNode.tId + "_span");
+				if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
+				var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
+					+ "' title='add node' onfocus='this.blur();'></span>";
+				sObj.after(addStr);
+				var btn = $("#addBtn_"+treeNode.tId);
+				if (btn) btn.bind("click", function(){
+					var zTree = $.fn.zTree.getZTreeObj("test");
+					zTree.addNodes(treeNode, {id:(1000 + newCount), pId:treeNode.id, name:"new node" + (newCount++)});
+					return false;
+				});
+			};
+			function removeHoverDom(treeId, treeNode) {
+				$("#addBtn_"+treeNode.tId).unbind().remove();
+			};
 		</script>
 	</head>
 
@@ -54,24 +96,30 @@
 				<div class="panel panel-default col-md-12">
 					<div class="panel-body" role="main" id="top">
 						<div id="add_rule_section" class="bs-docs-section">
-							<h4 id="add_rule_title" class="page-header">添加规则</h4>
-							<div id="test">
-
+							<h4 id="add_rule_title" class="page-header">管理本体</h4>
+							<div class="row">
+								<div class="col-sm-4">
+									<div id="test" class="ztree">
+										
+									</div>
+								</div>
+								<div class="col-sm-8">
+									<p>hahah</p>
+								</div>
 							</div>
 							<br />
-						</div>
-						<div class="bs-docs-section">
-							<h4 class="page-header">浏览规则</h4>
-							
-							<div class="col-sm-8 col-sm-offset-2">
-								
-							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 
+		<script type="text/javascript">
+			$(function() {  
+			treeA = $.fn.zTree.init($('#test'), setting, nodes);
+		 });  
+		</script>
+		
 		<!-- /.container -->
 		<!--script src="/SpringX/static/flat_ui/dist/js/vendor/jquery.min.js"></script-->
 		<script src="/SpringX/static/flat_ui/dist/js/flat-ui.min.js"></script>
