@@ -19,12 +19,23 @@
 		<script type="text/javascript">
 			var patient_info = {};
 			var chief_complaint_list = [];
-			var chief_complaint_last_time = ["一两天", "一周", "一个月", "几个月"];
 
-			patient_info.complaint = [];
+			patient_info.complaint = ['a'];
 			patient_info.complaint_time = [];
+			patient_info.complaint_degree = [];
+			patient_info.recommend_phy_exam = [];
 			patient_info.phy_exam = [];
 			patient_info.phy_exam_result = [];
+
+			patient_info.recommend_test = [];
+			patient_info.test = [];
+			patient_info.test_result = [];
+
+			patient_info.possible_disease = [];
+			patient_info.advice = [];
+
+			degree_list = ['未选择', '轻度', '中度', '重度'];
+			degree_list_en = ['unselected', 'light', 'medium', 'heavy'];
 
 			function tmpl_render_html(tmpl, target, d){
 				var html = $(tmpl).render(d);
@@ -79,6 +90,18 @@
 				  url: "ajax/phy_exam",
 				  data: JSON.stringify (patient_info), // or JSON.stringify ({name: 'jonas'}),
 				  success: function(d) { alert('data: ' + d); },
+				  contentType: "application/json",
+				  dataType: 'json'
+				});
+			}
+
+			//TODO 
+			function update_patient_info(){
+				$.ajax({
+				  type: 'POST',
+				  url: "ajax/update_patient_info",
+				  data: JSON.stringify (patient_info), // or JSON.stringify ({name: 'jonas'}),
+				  success: function(d) { console.log(d); },
 				  contentType: "application/json",
 				  dataType: 'json'
 				});
@@ -168,25 +191,29 @@
 						<script type="text/javascript">
 						function add_chief_complaint(){
 							patient_info.complaint.push(chief_complaint_list[$('#input_chief_complaint').val()]);
-							patient_info.complaint_time.push(chief_complaint_last_time[$('#input_chief_complaint_time').val()]);
+							patient_info.complaint_time.push($('#input_chief_complaint_time').val());
+							patient_info.complaint_degree.push($('#input_chief_complaint_degree').val());
 							update_chief_complaint_table();
 						}
 
 						function del_chief_complaint(id){
 							patient_info.complaint.splice(id, 1);
 							patient_info.complaint_time.splice(id, 1);
+							patient_info.complaint_degree.splice(id, 1);
 							update_chief_complaint_table();
 						}
 
 						function update_chief_complaint_table(){
 							str = "<tr>\
 									<th>症状</th>\
+									<th>程度</th>\
 									<th>持续时间</th>\
 									<th>删除</th>\
 								   </th>";
 							for (var i = 0; i < patient_info.complaint.length; i++){
 								str += "<tr>\
 											<td>" + patient_info.complaint[i] + "</td>\
+											<td>" + degree_list[patient_info.complaint_degree[i]] + "</td>\
 											<td>" + patient_info.complaint_time[i] + "</td>\
 											<td> <a href=\"javascript:void(0)\" onclick=\"del_chief_complaint(" + i + ");\">delete</a></td>\
 										</tr>";
@@ -209,24 +236,43 @@
 						<div id="chief_complaint_section" class="bs-docs-section row">
 							<h4 id="chief_complaint_title" class="page-header">主诉</h4>
 							<div class="col-sm-offset-1">
-								<select id="input_chief_complaint" class="form-control select select-primary select-block mbl">
-  								</select>
-  								&nbsp;&nbsp;
-  								<select id="input_chief_complaint_time" class="form-control select select-primary select-block mbl">
-									<option value="0">一两天</option>
-									<option value="1">一周</option>
-									<option value="2">一月</option>
-									<option value="3">几个月</option>
-  								</select>
-  								&nbsp;&nbsp;
-  								<select id="input_chief_complaint_degree" class="form-control select select-primary select-block mbl">
-									<option value="0">一两天</option>
-									<option value="1">一周</option>
-									<option value="2">一月</option>
-									<option value="3">几个月</option>
-  								</select>
-  								&nbsp;&nbsp;&nbsp;&nbsp;
-  								<button type="button" class="btn btn-info" onclick="add_chief_complaint();">添加</button>
+								<form class="form-horizontal">
+									<div class="control-group row">
+										<label class="control-label col-sm-2">症状：</label>
+										<div class="col-sm-10">
+											<select id="input_chief_complaint" class="form-control select select-primary select-block mbl">
+			  								</select>
+		  								</div>
+									</div>
+
+	  								<div class="control-group row">
+	  									<label class="control-label col-sm-2">严重程度：</label>
+										<div class="col-sm-10">
+		  									<select id="input_chief_complaint_degree" class="form-control select select-primary select-block mbl">
+												<option value="0">未选择</option>
+												<option value="1">轻度</option>
+												<option value="2">中度</option>
+												<option value="3">重度</option>
+			  								</select>
+										</div>
+	  								</div>
+
+	  								<div class="control-group row">
+	  									<label class="control-label col-sm-2">持续时间：</label>
+	  									<div class="col-sm-4">
+		  									<input id="input_chief_complaint_time" class="form-control input-large" type="text" placeholder="持续时间（天）"></input>
+	  									</div>
+	  								</div>
+	  								<br />
+	  								
+	  								<div class="control-group row">
+	  									<label class="control-label col-sm-2"></label>
+	  									<div class="col-sm-10">
+	  										<button type="button" class="btn btn-info" onclick="add_chief_complaint();">添加</button>
+	  									</div>
+	  								</div>
+	  								<br />
+								</form>
 							</div>
 							<div class="col-sm-offset-1 col-sm-9">
 								<table id="chief_complaint_table" class="table">
@@ -237,49 +283,112 @@
 						<script type="text/javascript">
 							function update_phy_exam_table(){
 								str = "";
-								for (var i = 0; i < patient_info['phy_exam'].length; i++){
-									str += "<div class=\"control-group row\">\
-												<label class=\"control-label col-md-2\">\
-													<strong>" + patient_info['phy_exam'][i] + "</strong>\
-												</label>\
-												<div class=\"col-md-8\">\
-													<input id=\"phy" + i + "\" class=\"form-control input-large\" type=\"text\"></input>\
-												</div>\
-											</div>";
+								for (var i = 0; i < patient_info.phy_exam.length; i++){
+									str += "<tr>\
+												<td>" + patient_info.phy_exam[i] + "</td>\
+												<td> <input id=\"phy" + i + "\" class=\"form-control input-large\" type=text></input> </td>\
+											</tr>";
 								}
 								$('#phy_exam_content').html(str);
+							}
+
+							function update_phy_exam_result(){
+								for (var i = 0; i < patient_info.phy_exam.length; i++){
+									patient_info.phy_exam_result[i] = $('#phy' + i).val();
+								}
 							}
 						</script>
 
 						<div id="phy_exam_section" class="bs-docs-section row">
 							<h4 id="phy_exam_title" class="page-header">体格检查</h4>
-							<div id="phy_exam_content" class="col-sm-offset-1">
-								
+							<div class="row">
+								<div class="col-sm-offset-2 col-sm-8">
+									<table id="phy_exam_content" class="table table-bordered">
+										
+									</table>
+								</div>
 							</div>
 							<br />
-							<div class="col-sm-offset-1">
-  								<button type="button" class="btn btn-info" onclick="">更新</button>
+							<div class="row">
+								<div class="col-sm-offset-3">
+	  								<button type="button" class="btn btn-info" onclick="">更新</button>
+								</div>
 							</div>
 						</div>
+	
+						<script type="text/javascript">
+							function update_test_table(){
+								str = "";
+								for (var i = 0; i < patient_info.test.length; i++){
+									str += "<tr>\
+												<td>" + patient_info.test[i] + "</td>\
+												<td> <input id=\"test" + i + "\" class=\"form-control input-large\" type=text></input> </td>\
+											</tr>";
+								}
+								$('#test_content').html(str);
+							}
 
-						<div id="recommend_exam_section" class="bs-docs-section row">
-							<h4 id="recommend_exam_title" class="page-header">推荐检查</h4>
-							<div class="col-sm-offset-1">
-
+							function update_test_result(){
+								for (var i = 0; i < patient_info.test.length; i++){
+									patient_info.test_result[i] = $('#test' + i).val();
+								}
+							}
+						</script>
+						<div id="test_section" class="bs-docs-section row">
+							<h4 id="test_title" class="page-header">推荐检查</h4>
+							<div class="row">
+								<div class="col-sm-offset-2 col-sm-8">
+									<table id="test_content" class="table table-bordered">
+										
+									</table>
+								</div>
+							</div>
+							<br />
+							<div class="row">
+								<div class="col-sm-offset-3">
+	  								<button type="button" class="btn btn-info" onclick="">更新</button>
+								</div>
 							</div>
 						</div>
-
+						
+						<script type="text/javascript">
+							function update_disease_table(){
+								str = "";
+								for (var i = 0; i < patient_info.possible_disease.length; ++i){
+									str += "<tr>\
+												<td>" + patient_info.possible_disease[i] + "</td>\
+											</tr>";
+								}
+								$('#disease_table').html(str);
+							}
+						</script>
 						<div id="diagnosis_result_section" class="bs-docs-section row">
 							<h4 id="diagnosis_result_title" class="page-header">初步诊断结果</h4>
 							<div class="col-sm-offset-1">
-
+								<table id="disease_table" class="table">
+									
+								</table>
 							</div>
 						</div>
+
+						<script type="text/javascript">
+							function update_advice_table(){
+								str = "";
+								for (var i = 0; i < patient_info.advice.length; ++i){
+									str += "<tr>\
+												<td>" + patient_info.advice[i] + "</td>\
+											</tr>";
+								}
+								$('#advice_table').html(str);
+							}
+						</script>
 
 						<div id="solution_section" class="bs-docs-section row">
 							<h4 id="solution_title" class="page-header">处理意见</h4>
 							<div class="col-sm-offset-1">
-
+								<table id="advice_table" class="table">
+									
+								</table>
 							</div>
 						</div>
 					</div>

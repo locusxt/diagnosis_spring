@@ -50,4 +50,10 @@ public class DiagnosisController {
     	info.genPhyExam();
     	return info;
     }
+    
+    @RequestMapping(value="/ajax/update_patient_info", method = RequestMethod.POST)
+    public @ResponseBody PatientInfo updatePatientInfo(@RequestBody PatientInfo info){
+    	info.update();
+    	return info;
+    }
 }
