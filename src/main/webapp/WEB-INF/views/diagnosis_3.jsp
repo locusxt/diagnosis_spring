@@ -204,47 +204,47 @@
 						</div>
 
 						<script type="text/javascript">
-						function add_chief_complaint(){
-							patient_info.complaint.push(chief_complaint_list[$('#input_chief_complaint').val()]);
-							patient_info.complaintTime.push($('#input_chief_complaintTime').val());
-							patient_info.complaintDegree.push($('#input_chief_complaintDegree').val());
-							update_chief_complaint_table();
-						}
-
-						function del_chief_complaint(id){
-							patient_info.complaint.splice(id, 1);
-							patient_info.complaintTime.splice(id, 1);
-							patient_info.complaintDegree.splice(id, 1);
-							update_chief_complaint_table();
-						}
-
-						function update_chief_complaint_table(){
-							str = "<tr>\
-									<th>症状</th>\
-									<th>程度</th>\
-									<th>持续时间</th>\
-									<th>删除</th>\
-								   </th>";
-							for (var i = 0; i < patient_info.complaint.length; i++){
-								str += "<tr>\
-											<td>" + patient_info.complaint[i] + "</td>\
-											<td>" + degree_list[patient_info.complaintDegree[i]] + "</td>\
-											<td>" + patient_info.complaintTime[i] + "</td>\
-											<td> <a href=\"javascript:void(0)\" onclick=\"del_chief_complaint(" + i + ");\">delete</a></td>\
-										</tr>";
+							function add_chief_complaint(){
+								patient_info.complaint.push(chief_complaint_list[$('#input_chief_complaint').val()]);
+								patient_info.complaintTime.push($('#input_chief_complaintTime').val());
+								patient_info.complaintDegree.push($('#input_chief_complaintDegree').val());
+								update_chief_complaint_table();
 							}
-							$('#chief_complaint_table').html(str);
-						}
 
-						function update_chief_complaint_list(){
-							str = "";
-							for (var i = 0; i < chief_complaint_list.length; i++){
-								str += "<option value=\"" + i + "\">" + chief_complaint_list[i] + "</option>";
+							function del_chief_complaint(id){
+								patient_info.complaint.splice(id, 1);
+								patient_info.complaintTime.splice(id, 1);
+								patient_info.complaintDegree.splice(id, 1);
+								update_chief_complaint_table();
 							}
-							$('#input_chief_complaint').html(str);
-							$('#input_chief_complaint').val(0);
-							$("select").select2({dropdownCssClass: 'dropdown-inverse'});
-						}
+
+							function update_chief_complaint_table(){
+								str = "<tr>\
+										<th>症状</th>\
+										<th>程度</th>\
+										<th>持续时间</th>\
+										<th>删除</th>\
+									   </th>";
+								for (var i = 0; i < patient_info.complaint.length; i++){
+									str += "<tr>\
+												<td>" + patient_info.complaint[i] + "</td>\
+												<td>" + degree_list[patient_info.complaintDegree[i]] + "</td>\
+												<td>" + patient_info.complaintTime[i] + "</td>\
+												<td> <a href=\"javascript:void(0)\" onclick=\"del_chief_complaint(" + i + ");\">delete</a></td>\
+											</tr>";
+								}
+								$('#chief_complaint_table').html(str);
+							}
+
+							function update_chief_complaint_list(){
+								str = "";
+								for (var i = 0; i < chief_complaint_list.length; i++){
+									str += "<option value=\"" + i + "\">" + chief_complaint_list[i] + "</option>";
+								}
+								$('#input_chief_complaint').html(str);
+								$('#input_chief_complaint').val(0);
+								$("select").select2({dropdownCssClass: 'dropdown-inverse'});
+							}
 
 						</script>
 
@@ -417,6 +417,30 @@
 							</div>
 						</div>
 					</div>
+				</div>
+				<div class="col-md-3" role="complementary">
+					<nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm" id="navbar-example" data-spy="affix" data-offset-top="20">
+						<ul class="nav bs-docs-sidenav">
+							<li>
+								<a href="#basic_info_section">基本信息</a>
+							</li>
+							<li>
+								<a href="#chief_complaint_section">主诉</a>
+							</li>
+							<li>
+								<a href="#phyExam_section">体格检查</a>
+							</li>
+							<li>
+								<a href="#test_section">推荐检查</a>
+							</li>
+							<li>
+								<a href="#solution_section">处理意见</a>
+							</li>
+							<li>
+								<a href="#top" class="back-to-top">返回顶部</a>
+							</li>
+						</ul>
+					</nav>
 				</div>
 			</div>
 		</div>
