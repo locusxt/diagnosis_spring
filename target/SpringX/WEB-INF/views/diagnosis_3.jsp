@@ -20,7 +20,7 @@
 			var patient_info = {};
 			var chief_complaint_list = [];
 
-			patient_info.complaint = ['a'];
+			patient_info.complaint = [];
 			patient_info.complaintTime = [];
 			patient_info.complaintDegree = [];
 			patient_info.recommendPhyExam = [];
@@ -82,6 +82,12 @@
 				$('#patient_age').html($('#input_age').val());
 				$('#case_office').html($('#input_office').val());
 				$('#case_id').html($('#input_id').val());
+				
+				patient_info.name = $('#input_name').val();
+				patient_info.gender = $("input:radio[name='input_gender'][checked]").val();
+				patient_info.id = $('#input_id').val();
+				patient_info.age = $('#input_age').val();
+				patient_info.office = $('#input_office').val();
 			}
 
 			function get_phyExam(){
@@ -198,47 +204,47 @@
 						</div>
 
 						<script type="text/javascript">
-						function add_chief_complaint(){
-							patient_info.complaint.push(chief_complaint_list[$('#input_chief_complaint').val()]);
-							patient_info.complaintTime.push($('#input_chief_complaintTime').val());
-							patient_info.complaintDegree.push($('#input_chief_complaintDegree').val());
-							update_chief_complaint_table();
-						}
-
-						function del_chief_complaint(id){
-							patient_info.complaint.splice(id, 1);
-							patient_info.complaintTime.splice(id, 1);
-							patient_info.complaintDegree.splice(id, 1);
-							update_chief_complaint_table();
-						}
-
-						function update_chief_complaint_table(){
-							str = "<tr>\
-									<th>症状</th>\
-									<th>程度</th>\
-									<th>持续时间</th>\
-									<th>删除</th>\
-								   </th>";
-							for (var i = 0; i < patient_info.complaint.length; i++){
-								str += "<tr>\
-											<td>" + patient_info.complaint[i] + "</td>\
-											<td>" + degree_list[patient_info.complaintDegree[i]] + "</td>\
-											<td>" + patient_info.complaintTime[i] + "</td>\
-											<td> <a href=\"javascript:void(0)\" onclick=\"del_chief_complaint(" + i + ");\">delete</a></td>\
-										</tr>";
+							function add_chief_complaint(){
+								patient_info.complaint.push(chief_complaint_list[$('#input_chief_complaint').val()]);
+								patient_info.complaintTime.push($('#input_chief_complaintTime').val());
+								patient_info.complaintDegree.push($('#input_chief_complaintDegree').val());
+								update_chief_complaint_table();
 							}
-							$('#chief_complaint_table').html(str);
-						}
 
-						function update_chief_complaint_list(){
-							str = "";
-							for (var i = 0; i < chief_complaint_list.length; i++){
-								str += "<option value=\"" + i + "\">" + chief_complaint_list[i] + "</option>";
+							function del_chief_complaint(id){
+								patient_info.complaint.splice(id, 1);
+								patient_info.complaintTime.splice(id, 1);
+								patient_info.complaintDegree.splice(id, 1);
+								update_chief_complaint_table();
 							}
-							$('#input_chief_complaint').html(str);
-							$('#input_chief_complaint').val(0);
-							$("select").select2({dropdownCssClass: 'dropdown-inverse'});
-						}
+
+							function update_chief_complaint_table(){
+								str = "<tr>\
+										<th>症状</th>\
+										<th>程度</th>\
+										<th>持续时间</th>\
+										<th>删除</th>\
+									   </th>";
+								for (var i = 0; i < patient_info.complaint.length; i++){
+									str += "<tr>\
+												<td>" + patient_info.complaint[i] + "</td>\
+												<td>" + degree_list[patient_info.complaintDegree[i]] + "</td>\
+												<td>" + patient_info.complaintTime[i] + "</td>\
+												<td> <a href=\"javascript:void(0)\" onclick=\"del_chief_complaint(" + i + ");\">delete</a></td>\
+											</tr>";
+								}
+								$('#chief_complaint_table').html(str);
+							}
+
+							function update_chief_complaint_list(){
+								str = "";
+								for (var i = 0; i < chief_complaint_list.length; i++){
+									str += "<option value=\"" + i + "\">" + chief_complaint_list[i] + "</option>";
+								}
+								$('#input_chief_complaint').html(str);
+								$('#input_chief_complaint').val(0);
+								$("select").select2({dropdownCssClass: 'dropdown-inverse'});
+							}
 
 						</script>
 
@@ -283,15 +289,15 @@
 	  								<br />
 								</form>
 							</div>
-							<div class="col-sm-offset-1 col-sm-9">
-								<table id="chief_complaint_table" class="table">
+							<div class="col-sm-offset-2 col-sm-8">
+								<table id="chief_complaint_table" class="table table-bordered">
 								</table>
 							</div>
 						</div>
 
 						<script type="text/javascript">
 							function update_phyExam_table(){
-								str = "";
+								str = "<tr><th>项目</th><th>结果</th></tr>";
 								for (var i = 0; i < patient_info.phyExam.length; i++){
 									str += "<tr>\
 												<td>" + patient_info.phyExam[i] + "</td>\
@@ -299,12 +305,16 @@
 											</tr>";
 								}
 								$('#phyExam_content').html(str);
+								for (var i = 0; i < patient_info.phyExam.length; ++i){
+									$('#phy' + i).val(patient_info.phyExamResult[i]);
+								}
 							}
 
 							function update_phyExamResult(){
 								for (var i = 0; i < patient_info.phyExam.length; i++){
 									patient_info.phyExamResult[i] = $('#phy' + i).val();
 								}
+								update_patient_info();
 							}
 						</script>
 
@@ -320,14 +330,14 @@
 							<br />
 							<div class="row">
 								<div class="col-sm-offset-3">
-	  								<button type="button" class="btn btn-info" onclick="">更新</button>
+	  								<button type="button" class="btn btn-info" onclick="update_phyExamResult();">更新</button>
 								</div>
 							</div>
 						</div>
 	
 						<script type="text/javascript">
 							function update_test_table(){
-								str = "";
+								str = "<tr><th>项目</th><th>结果</th></tr>";
 								for (var i = 0; i < patient_info.test.length; i++){
 									str += "<tr>\
 												<td>" + patient_info.test[i] + "</td>\
@@ -335,11 +345,15 @@
 											</tr>";
 								}
 								$('#test_content').html(str);
+								for (var i = 0; i < patient_info.test.length; ++i){
+									$('#test' + i).val(patient_info.testResult[i]);
+								}
 							}
 
 							function update_testResult(){
 								for (var i = 0; i < patient_info.test.length; i++){
 									patient_info.testResult[i] = $('#test' + i).val();
+									update_patient_info();
 								}
 							}
 						</script>
@@ -355,17 +369,18 @@
 							<br />
 							<div class="row">
 								<div class="col-sm-offset-3">
-	  								<button type="button" class="btn btn-info" onclick="">更新</button>
+	  								<button type="button" class="btn btn-info" onclick="update_testResult();">更新</button>
 								</div>
 							</div>
 						</div>
 						
 						<script type="text/javascript">
 							function update_disease_table(){
-								str = "";
+								str = "<tr><th>病名</th><th>概率</th></tr>";
 								for (var i = 0; i < patient_info.possibleDisease.length; ++i){
 									str += "<tr>\
 												<td>" + patient_info.possibleDisease[i] + "</td>\
+												<td></td>\
 											</tr>";
 								}
 								$('#disease_table').html(str);
@@ -373,8 +388,8 @@
 						</script>
 						<div id="diagnosis_result_section" class="bs-docs-section row">
 							<h4 id="diagnosis_result_title" class="page-header">初步诊断结果</h4>
-							<div class="col-sm-offset-1">
-								<table id="disease_table" class="table">
+							<div class="col-sm-offset-2 col-sm-8">
+								<table id="disease_table" class="table table-bordered">
 									
 								</table>
 							</div>
@@ -382,10 +397,11 @@
 
 						<script type="text/javascript">
 							function update_advice_table(){
-								str = "";
+								str = "<tr><th>处理意见</th><th>具体描述</th></tr>";
 								for (var i = 0; i < patient_info.advice.length; ++i){
 									str += "<tr>\
 												<td>" + patient_info.advice[i] + "</td>\
+												<td></td>\
 											</tr>";
 								}
 								$('#advice_table').html(str);
@@ -394,13 +410,37 @@
 
 						<div id="solution_section" class="bs-docs-section row">
 							<h4 id="solution_title" class="page-header">处理意见</h4>
-							<div class="col-sm-offset-1">
-								<table id="advice_table" class="table">
+							<div class="col-sm-offset-2 col-sm-8">
+								<table id="advice_table" class="table table-bordered">
 									
 								</table>
 							</div>
 						</div>
 					</div>
+				</div>
+				<div class="col-md-3" role="complementary">
+					<nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm" id="navbar-example" data-spy="affix" data-offset-top="20">
+						<ul class="nav bs-docs-sidenav">
+							<li>
+								<a href="#basic_info_section">基本信息</a>
+							</li>
+							<li>
+								<a href="#chief_complaint_section">主诉</a>
+							</li>
+							<li>
+								<a href="#phyExam_section">体格检查</a>
+							</li>
+							<li>
+								<a href="#test_section">推荐检查</a>
+							</li>
+							<li>
+								<a href="#solution_section">处理意见</a>
+							</li>
+							<li>
+								<a href="#top" class="back-to-top">返回顶部</a>
+							</li>
+						</ul>
+					</nav>
 				</div>
 			</div>
 		</div>

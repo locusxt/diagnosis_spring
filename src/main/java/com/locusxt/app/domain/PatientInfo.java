@@ -1,5 +1,6 @@
 package com.locusxt.app.domain;
 
+
 public class PatientInfo {
 	String name;
 	String gender;
