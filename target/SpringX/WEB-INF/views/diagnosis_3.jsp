@@ -21,17 +21,17 @@
 			var chief_complaint_list = [];
 
 			patient_info.complaint = ['a'];
-			patient_info.complaint_time = [];
-			patient_info.complaint_degree = [];
-			patient_info.recommend_phy_exam = [];
-			patient_info.phy_exam = [];
-			patient_info.phy_exam_result = [];
+			patient_info.complaintTime = [];
+			patient_info.complaintDegree = [];
+			patient_info.recommendPhyExam = [];
+			patient_info.phyExam = [];
+			patient_info.phyExamResult = [];
 
-			patient_info.recommend_test = [];
+			patient_info.recommendTest = [];
 			patient_info.test = [];
-			patient_info.test_result = [];
+			patient_info.testResult = [];
 
-			patient_info.possible_disease = [];
+			patient_info.possibleDisease = [];
 			patient_info.advice = [];
 
 			degree_list = ['未选择', '轻度', '中度', '重度'];
@@ -84,10 +84,10 @@
 				$('#case_id').html($('#input_id').val());
 			}
 
-			function get_phy_exam(){
+			function get_phyExam(){
 				$.ajax({
 				  type: 'POST',
-				  url: "ajax/phy_exam",
+				  url: "ajax/phyExam",
 				  data: JSON.stringify (patient_info), // or JSON.stringify ({name: 'jonas'}),
 				  success: function(d) { alert('data: ' + d); },
 				  contentType: "application/json",
@@ -97,11 +97,20 @@
 
 			//TODO 
 			function update_patient_info(){
+				console.log(patient_info);
 				$.ajax({
 				  type: 'POST',
 				  url: "ajax/update_patient_info",
 				  data: JSON.stringify (patient_info), // or JSON.stringify ({name: 'jonas'}),
-				  success: function(d) { console.log(d); },
+				  success: function(d) {
+				  	console.log(d); 
+				  	patient_info = d;
+				  	update_disease_table();
+				  	update_advice_table();
+				  	update_chief_complaint_table();
+				  	update_test_table();
+				  	update_phyExam_table();
+				  },
 				  contentType: "application/json",
 				  dataType: 'json'
 				});
@@ -191,15 +200,15 @@
 						<script type="text/javascript">
 						function add_chief_complaint(){
 							patient_info.complaint.push(chief_complaint_list[$('#input_chief_complaint').val()]);
-							patient_info.complaint_time.push($('#input_chief_complaint_time').val());
-							patient_info.complaint_degree.push($('#input_chief_complaint_degree').val());
+							patient_info.complaintTime.push($('#input_chief_complaintTime').val());
+							patient_info.complaintDegree.push($('#input_chief_complaintDegree').val());
 							update_chief_complaint_table();
 						}
 
 						function del_chief_complaint(id){
 							patient_info.complaint.splice(id, 1);
-							patient_info.complaint_time.splice(id, 1);
-							patient_info.complaint_degree.splice(id, 1);
+							patient_info.complaintTime.splice(id, 1);
+							patient_info.complaintDegree.splice(id, 1);
 							update_chief_complaint_table();
 						}
 
@@ -213,8 +222,8 @@
 							for (var i = 0; i < patient_info.complaint.length; i++){
 								str += "<tr>\
 											<td>" + patient_info.complaint[i] + "</td>\
-											<td>" + degree_list[patient_info.complaint_degree[i]] + "</td>\
-											<td>" + patient_info.complaint_time[i] + "</td>\
+											<td>" + degree_list[patient_info.complaintDegree[i]] + "</td>\
+											<td>" + patient_info.complaintTime[i] + "</td>\
 											<td> <a href=\"javascript:void(0)\" onclick=\"del_chief_complaint(" + i + ");\">delete</a></td>\
 										</tr>";
 							}
@@ -248,7 +257,7 @@
 	  								<div class="control-group row">
 	  									<label class="control-label col-sm-2">严重程度：</label>
 										<div class="col-sm-10">
-		  									<select id="input_chief_complaint_degree" class="form-control select select-primary select-block mbl">
+		  									<select id="input_chief_complaintDegree" class="form-control select select-primary select-block mbl">
 												<option value="0">未选择</option>
 												<option value="1">轻度</option>
 												<option value="2">中度</option>
@@ -260,7 +269,7 @@
 	  								<div class="control-group row">
 	  									<label class="control-label col-sm-2">持续时间：</label>
 	  									<div class="col-sm-4">
-		  									<input id="input_chief_complaint_time" class="form-control input-large" type="text" placeholder="持续时间（天）"></input>
+		  									<input id="input_chief_complaintTime" class="form-control input-large" type="text" placeholder="持续时间（天）"></input>
 	  									</div>
 	  								</div>
 	  								<br />
@@ -281,29 +290,29 @@
 						</div>
 
 						<script type="text/javascript">
-							function update_phy_exam_table(){
+							function update_phyExam_table(){
 								str = "";
-								for (var i = 0; i < patient_info.phy_exam.length; i++){
+								for (var i = 0; i < patient_info.phyExam.length; i++){
 									str += "<tr>\
-												<td>" + patient_info.phy_exam[i] + "</td>\
+												<td>" + patient_info.phyExam[i] + "</td>\
 												<td> <input id=\"phy" + i + "\" class=\"form-control input-large\" type=text></input> </td>\
 											</tr>";
 								}
-								$('#phy_exam_content').html(str);
+								$('#phyExam_content').html(str);
 							}
 
-							function update_phy_exam_result(){
-								for (var i = 0; i < patient_info.phy_exam.length; i++){
-									patient_info.phy_exam_result[i] = $('#phy' + i).val();
+							function update_phyExamResult(){
+								for (var i = 0; i < patient_info.phyExam.length; i++){
+									patient_info.phyExamResult[i] = $('#phy' + i).val();
 								}
 							}
 						</script>
 
-						<div id="phy_exam_section" class="bs-docs-section row">
-							<h4 id="phy_exam_title" class="page-header">体格检查</h4>
+						<div id="phyExam_section" class="bs-docs-section row">
+							<h4 id="phyExam_title" class="page-header">体格检查</h4>
 							<div class="row">
 								<div class="col-sm-offset-2 col-sm-8">
-									<table id="phy_exam_content" class="table table-bordered">
+									<table id="phyExam_content" class="table table-bordered">
 										
 									</table>
 								</div>
@@ -328,9 +337,9 @@
 								$('#test_content').html(str);
 							}
 
-							function update_test_result(){
+							function update_testResult(){
 								for (var i = 0; i < patient_info.test.length; i++){
-									patient_info.test_result[i] = $('#test' + i).val();
+									patient_info.testResult[i] = $('#test' + i).val();
 								}
 							}
 						</script>
@@ -354,9 +363,9 @@
 						<script type="text/javascript">
 							function update_disease_table(){
 								str = "";
-								for (var i = 0; i < patient_info.possible_disease.length; ++i){
+								for (var i = 0; i < patient_info.possibleDisease.length; ++i){
 									str += "<tr>\
-												<td>" + patient_info.possible_disease[i] + "</td>\
+												<td>" + patient_info.possibleDisease[i] + "</td>\
 											</tr>";
 								}
 								$('#disease_table').html(str);

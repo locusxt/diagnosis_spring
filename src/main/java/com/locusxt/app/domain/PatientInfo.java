@@ -9,15 +9,15 @@ public class PatientInfo {
 	
 	String complaint[];
 	String complaintTime[];
-	String complaintDegree[];//
-	String recommendPhyExam[];//
+	String complaintDegree[];
+	String recommendPhyExam[];
 	String phyExam[];
 	String phyExamResult[];
-	String recommendTest[];//
-	String test[];//
-	String testResult[];//
-	String possibleDisease[];//
-	String advice[];//
+	String recommendTest[];
+	String test[];
+	String testResult[];
+	String possibleDisease[];
+	String advice[];
 	
 	public void setName(String name){this.name = name;}
 	

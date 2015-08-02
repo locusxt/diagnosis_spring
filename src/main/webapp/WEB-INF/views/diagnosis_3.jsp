@@ -20,7 +20,7 @@
 			var patient_info = {};
 			var chief_complaint_list = [];
 
-			patient_info.complaint = ['a'];
+			patient_info.complaint = [];
 			patient_info.complaintTime = [];
 			patient_info.complaintDegree = [];
 			patient_info.recommendPhyExam = [];
@@ -82,6 +82,12 @@
 				$('#patient_age').html($('#input_age').val());
 				$('#case_office').html($('#input_office').val());
 				$('#case_id').html($('#input_id').val());
+				
+				patient_info.name = $('#input_name').val();
+				patient_info.gender = $("input:radio[name='input_gender'][checked]").val();
+				patient_info.id = $('#input_id').val();
+				patient_info.age = $('#input_age').val();
+				patient_info.office = $('#input_office').val();
 			}
 
 			function get_phyExam(){
@@ -283,15 +289,15 @@
 	  								<br />
 								</form>
 							</div>
-							<div class="col-sm-offset-1 col-sm-9">
-								<table id="chief_complaint_table" class="table">
+							<div class="col-sm-offset-2 col-sm-8">
+								<table id="chief_complaint_table" class="table table-bordered">
 								</table>
 							</div>
 						</div>
 
 						<script type="text/javascript">
 							function update_phyExam_table(){
-								str = "";
+								str = "<tr><th>项目</th><th>结果</th></tr>";
 								for (var i = 0; i < patient_info.phyExam.length; i++){
 									str += "<tr>\
 												<td>" + patient_info.phyExam[i] + "</td>\
@@ -299,12 +305,16 @@
 											</tr>";
 								}
 								$('#phyExam_content').html(str);
+								for (var i = 0; i < patient_info.phyExam.length; ++i){
+									$('#phy' + i).val(patient_info.phyExamResult[i]);
+								}
 							}
 
 							function update_phyExamResult(){
 								for (var i = 0; i < patient_info.phyExam.length; i++){
 									patient_info.phyExamResult[i] = $('#phy' + i).val();
 								}
+								update_patient_info();
 							}
 						</script>
 
@@ -320,14 +330,14 @@
 							<br />
 							<div class="row">
 								<div class="col-sm-offset-3">
-	  								<button type="button" class="btn btn-info" onclick="">更新</button>
+	  								<button type="button" class="btn btn-info" onclick="update_phyExamResult();">更新</button>
 								</div>
 							</div>
 						</div>
 	
 						<script type="text/javascript">
 							function update_test_table(){
-								str = "";
+								str = "<tr><th>项目</th><th>结果</th></tr>";
 								for (var i = 0; i < patient_info.test.length; i++){
 									str += "<tr>\
 												<td>" + patient_info.test[i] + "</td>\
@@ -335,11 +345,15 @@
 											</tr>";
 								}
 								$('#test_content').html(str);
+								for (var i = 0; i < patient_info.test.length; ++i){
+									$('#test' + i).val(patient_info.testResult[i]);
+								}
 							}
 
 							function update_testResult(){
 								for (var i = 0; i < patient_info.test.length; i++){
 									patient_info.testResult[i] = $('#test' + i).val();
+									update_patient_info();
 								}
 							}
 						</script>
@@ -355,17 +369,18 @@
 							<br />
 							<div class="row">
 								<div class="col-sm-offset-3">
-	  								<button type="button" class="btn btn-info" onclick="">更新</button>
+	  								<button type="button" class="btn btn-info" onclick="update_testResult();">更新</button>
 								</div>
 							</div>
 						</div>
 						
 						<script type="text/javascript">
 							function update_disease_table(){
-								str = "";
+								str = "<tr><th>病名</th><th>概率</th></tr>";
 								for (var i = 0; i < patient_info.possibleDisease.length; ++i){
 									str += "<tr>\
 												<td>" + patient_info.possibleDisease[i] + "</td>\
+												<td></td>\
 											</tr>";
 								}
 								$('#disease_table').html(str);
@@ -373,8 +388,8 @@
 						</script>
 						<div id="diagnosis_result_section" class="bs-docs-section row">
 							<h4 id="diagnosis_result_title" class="page-header">初步诊断结果</h4>
-							<div class="col-sm-offset-1">
-								<table id="disease_table" class="table">
+							<div class="col-sm-offset-2 col-sm-8">
+								<table id="disease_table" class="table table-bordered">
 									
 								</table>
 							</div>
@@ -382,10 +397,11 @@
 
 						<script type="text/javascript">
 							function update_advice_table(){
-								str = "";
+								str = "<tr><th>处理意见</th><th>具体描述</th></tr>";
 								for (var i = 0; i < patient_info.advice.length; ++i){
 									str += "<tr>\
 												<td>" + patient_info.advice[i] + "</td>\
+												<td></td>\
 											</tr>";
 								}
 								$('#advice_table').html(str);
@@ -394,8 +410,8 @@
 
 						<div id="solution_section" class="bs-docs-section row">
 							<h4 id="solution_title" class="page-header">处理意见</h4>
-							<div class="col-sm-offset-1">
-								<table id="advice_table" class="table">
+							<div class="col-sm-offset-2 col-sm-8">
+								<table id="advice_table" class="table table-bordered">
 									
 								</table>
 							</div>
