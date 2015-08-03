@@ -20,14 +20,20 @@
 			var patient_info = {};
 			var chief_complaint_list = [];
 
+			patient_info.name = "";
+			patient_info.gender = "";
+			patient_info.id = "";
+			patient_info.age = "";
+			patient_info.office = "";
+
 			patient_info.complaint = [];
 			patient_info.complaintTime = [];
 			patient_info.complaintDegree = [];
 			patient_info.phyExam = [];
 			patient_info.phyExamResult = [];
 
-			patient_info.test = [];
-			patient_info.testResult = [];
+			patient_info.test = ["temperature"];
+			patient_info.testResult = [""];
 
 			patient_info.possibleDisease = [];
 			patient_info.advice = [];
@@ -81,11 +87,16 @@
 				$('#case_office').html($('#input_office').val());
 				$('#case_id').html($('#input_id').val());
 				
-				patient_info.name = $('#input_name').val();
-				patient_info.gender = $("input:radio[name='input_gender'][checked]").val();
-				patient_info.id = $('#input_id').val();
-				patient_info.age = $('#input_age').val();
-				patient_info.office = $('#input_office').val();
+				if ($('#input_name').val() != "")
+					patient_info.name = $('#input_name').val();
+				if ($("input:radio[name='input_gender'][checked]").val() != undefined)
+					patient_info.gender = $("input:radio[name='input_gender'][checked]").val();
+				if ($('#input_id').val() != "")
+					patient_info.id = $('#input_id').val();
+				if ($('#input_age').val() != "")
+					patient_info.age = $('#input_age').val();
+				if ($('#input_office').val() != "")
+					patient_info.office = $('#input_office').val();
 			}
 
 			function get_phyExam(){
@@ -102,6 +113,7 @@
 			//TODO 
 			function update_patient_info(){
 				console.log(patient_info);
+				update_basic_info();
 				$.ajax({
 				  type: 'POST',
 				  url: "ajax/update_patient_info",

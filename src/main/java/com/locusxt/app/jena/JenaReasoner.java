@@ -4,6 +4,8 @@ import com.hp.hpl.jena.ontology.DatatypeProperty;
 import com.hp.hpl.jena.ontology.ObjectProperty;
 import com.hp.hpl.jena.ontology.OntClass;
 import com.hp.hpl.jena.ontology.OntModel;
+import com.hp.hpl.jena.ontology.OntModelSpec;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.locusxt.app.domain.PatientInfo;
 
 public class JenaReasoner {
@@ -11,6 +13,7 @@ public class JenaReasoner {
 	public static OntModel mData;
 	
 	public void genDatamodel(PatientInfo info){
+		mData=ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM);
 		OntClass ont = mData.createClass(defaultNameSpace + info.getName());
 		int complaintNum = info.getComplaint().length;
 		OntClass complaint[] = new OntClass[complaintNum];
