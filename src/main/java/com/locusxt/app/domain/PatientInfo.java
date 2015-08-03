@@ -11,10 +11,8 @@ public class PatientInfo {
 	String complaint[];
 	String complaintTime[];
 	String complaintDegree[];
-	String recommendPhyExam[];
 	String phyExam[];
 	String phyExamResult[];
-	String recommendTest[];
 	String test[];
 	String testResult[];
 	String possibleDisease[];
@@ -52,10 +50,6 @@ public class PatientInfo {
 	
 	public String[] getComplaintDegree(){return this.complaintDegree;}
 	
-	public void setRecommendPhyExam(String recommendPhyExam[]){this.recommendPhyExam = recommendPhyExam;}
-	
-	public String[] getRecommendPhyExam(){return this.recommendPhyExam;}
-	
 	public void setPhyExam(String phyExam[]){this.phyExam = phyExam;}
 	
 	public String[] getPhyExam(){return this.phyExam;}
@@ -63,10 +57,6 @@ public class PatientInfo {
 	public void setPhyExamResult(String phyExamResult[]){this.phyExamResult = phyExamResult;}
 	
 	public String[] getPhyExamResult(){return this.phyExamResult;}
-	
-	public void setRecommendTest(String recommendTest[]){this.recommendTest = recommendTest;}
-	
-	public String[] getRecommendTest(){return this.recommendTest;}
 	
 	public void setTest(String test[]){this.test = test;}
 	
@@ -105,8 +95,11 @@ public class PatientInfo {
 	}
 	
 	public void update(){
-		this.possibleDisease = new String[]{"感冒", "肺炎"};
-		this.phyExam = new String[]{"体温", "e1"};
+		//this.possibleDisease = new String[]{"cold", ""};
+		this.complaint = new String[]{"headache"};
+		this.complaintDegree = new String[]{"light"};
+		this.complaintTime = new String[]{"7"};
+		this.phyExam = new String[]{"temperature", "e1"};
 	}
 	
 }

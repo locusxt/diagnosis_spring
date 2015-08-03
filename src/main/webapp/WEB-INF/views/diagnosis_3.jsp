@@ -23,11 +23,9 @@
 			patient_info.complaint = [];
 			patient_info.complaintTime = [];
 			patient_info.complaintDegree = [];
-			patient_info.recommendPhyExam = [];
 			patient_info.phyExam = [];
 			patient_info.phyExamResult = [];
 
-			patient_info.recommendTest = [];
 			patient_info.test = [];
 			patient_info.testResult = [];
 
