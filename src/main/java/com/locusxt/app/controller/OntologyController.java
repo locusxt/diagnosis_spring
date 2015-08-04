@@ -10,6 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class OntologyController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String diagnosis(ModelMap model) {
-		return "ontologymanager";
+		return "ontologymanager_2";
 	}
 }

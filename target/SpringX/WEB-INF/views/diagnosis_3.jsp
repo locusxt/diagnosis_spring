@@ -32,8 +32,8 @@
 			patient_info.phyExam = [];
 			patient_info.phyExamResult = [];
 
-			patient_info.test = ["temperature"];
-			patient_info.testResult = [""];
+			patient_info.test = [];
+			patient_info.testResult = [];
 
 			patient_info.possibleDisease = [];
 			patient_info.advice = [];
