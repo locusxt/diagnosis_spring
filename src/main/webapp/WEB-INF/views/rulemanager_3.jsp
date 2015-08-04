@@ -191,14 +191,14 @@
 													}
 
 													function update_symptom_table(){
-														str = "<tr><th>症状描述</th><th>删除</th></tr>";
+														str = "<tr><th>症状描述</th><th></th></tr>";
 														for (var i = 0; i < rule_symptom_list.length; ++i){
 															str += "<tr>";
 															str += "<td>";
 															str += symptom2rstr(rule_symptom_list[i]);
 															str += "</td>";
 															str += "<td>";
-															str += "<a href=\"javascript:void(0)\" onclick=\"del_symptom(" + i + ")\">删除</a>"
+															str += "<a href=\"javascript:void(0)\" onclick=\"del_symptom(" + i + ")\"><span class=\"glyphicon glyphicon-trash\"></span></a>"
 															str += "</td>"
 															str += "</tr>";
 														}
@@ -208,7 +208,7 @@
 												</script>
 												<div class="row">
 													<div class="col-sm-8">
-														<table id="symptom_table" class="table table-bordered table-hover table-striped">
+														<table id="symptom_table" class="table table-hover table-striped">
 															
 														</table>
 													</div>
@@ -296,12 +296,12 @@
 												}
 
 												function update_dataobj_table(){
-													str = "<tr><th>约束描述</th><th>删除</th></tr>";
+													str = "<tr><th>约束描述</th><th></th></tr>";
 													for (var i = 0; i < rule_dataobj_list.length; ++i){
 														str += "<tr><td>";
 														str += dataobj2rstr(rule_dataobj_list[i]);
 														str += "</td><td>"
-														str += "<a href=\"javascript:void(0);\" onclick=\"del_dataobj(" + i +");\">删除</a>";
+														str += "<a href=\"javascript:void(0);\" onclick=\"del_dataobj(" + i +");\"><span class=\"glyphicon glyphicon-trash\"></span></a>";
 														str += "</td></tr>";
 													}
 													$('#dataobj_table').html(str);
@@ -317,7 +317,7 @@
 												同时满足以下条件：
 												<div class="row">
 													<div class="col-sm-8">
-														<table id="dataobj_table" class="table table-bordered table-hover table-striped">
+														<table id="dataobj_table" class="table table-hover table-striped">
 															
 														</table>
 													</div>
@@ -644,12 +644,12 @@
 								}
 
 								function update_rules_table(){
-									str = "<tr><th>规则</th><th>删除</th></tr>";
+									str = "<tr><th>规则</th><th></th></tr>";
 									for (var i = 0; i < current_comments.length; ++i){
 										str += "<tr><td>";
 										str += current_comments[i];
 										str += "</td><td>";
-										str += "<a href=\"javascript:void(0)\" onclick=\"del_rule(" + ((choosed_index-1) * 10 + 3 + i) + "," + i + ");\">删除</a>";
+										str += "<a href=\"javascript:void(0)\" onclick=\"del_rule(" + ((choosed_index-1) * 10 + 3 + i) + "," + i + ");\"><span class=\"glyphicon glyphicon-trash\"></span></a>";
 										str += "</td></tr>";
 									}
 									for (i = current_comments.length - 1; i < 10; ++i){
@@ -705,7 +705,7 @@
 								}
 							</script>
 							<div class="col-sm-8 col-sm-offset-2">
-								<table class="table table-bordered table-hover table-striped" id="rules_table">
+								<table class="table table-hover table-striped" id="rules_table">
 									
 								</table>
 								<ul class="pagination-plain" id="index_list">

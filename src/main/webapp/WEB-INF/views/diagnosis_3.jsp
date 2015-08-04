@@ -233,14 +233,14 @@
 										<th>症状</th>\
 										<th>程度</th>\
 										<th>持续时间</th>\
-										<th>删除</th>\
+										<th></th>\
 									   </th>";
 								for (var i = 0; i < patient_info.complaint.length; i++){
 									str += "<tr>\
 												<td>" + patient_info.complaint[i] + "</td>\
 												<td>" + degree_list[patient_info.complaintDegree[i]] + "</td>\
 												<td>" + patient_info.complaintTime[i] + "</td>\
-												<td> <a href=\"javascript:void(0)\" onclick=\"del_chief_complaint(" + i + ");\">delete</a></td>\
+												<td> <a href=\"javascript:void(0)\" onclick=\"del_chief_complaint(" + i + ");\"><span class=\"glyphicon glyphicon-trash\"></span></a></td>\
 											</tr>";
 								}
 								$('#chief_complaint_table').html(str);
@@ -300,7 +300,7 @@
 								</form>
 							</div>
 							<div class="col-sm-offset-2 col-sm-8">
-								<table id="chief_complaint_table" class="table table-bordered">
+								<table id="chief_complaint_table" class="table table-hover table-striped">
 								</table>
 							</div>
 						</div>
