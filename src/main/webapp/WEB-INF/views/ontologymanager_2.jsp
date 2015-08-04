@@ -54,25 +54,6 @@
 		var x;
 		var y;
 
-		/*var zNodes =[
-			{ id:1, pId:0, name:"disease", open:true},
-			{ id:11, pId:1, name:"上呼吸道感染"},
-			{ id:111, pId:11, name:"普通感冒"},
-			{ id:112, pId:11, name:"流行性感冒"},
-			{ id:113, pId:11, name:"咽炎感染"},
-			{ id:1121, pId:112, name:"单纯型"},
-			{ id:1122, pId:112, name:"肺炎型"},
-			{ id:2, pId:0, name:"症状", open:false},
-			{ id:21, pId:2, name:"咽干"},
-			{ id:22, pId:2, name:"咽痒"},
-			{ id:23, pId:2, name:"灼烧"},
-			{ id:24, pId:2, name:"发热"},
-			{ id:25, pId:2, name:"鼻塞"},
-			{ id:26, pId:2, name:"流涕"},
-
-
-		];*/
-
 		var OntModel={
 				zNodes:[
 					{ id:1, pId:0, name:"disease", open:true},
@@ -103,6 +84,7 @@
 			//alert(treeNode.tId + ", " + treeNode.name);
 			$("#treeid").val(treeNode.name); //显示树节点名字
 			$(function(){
+				$('#object').html('');
 				$.each(OntModel.zNodes,function(i,item){
 					//alert(val);
 					$("#object").append("<option>"+item.name+"</option>"); //遍历其他节点作为下拉菜单
@@ -130,7 +112,7 @@
 
 
 				//alert("mm");
-				console.log('233');
+				// console.log('233');
 				var selectProperty = $("#property").find("option:selected").text();
 				// var inputSubject =$("#treeid").attr("value");
 				var inputSubject = $("#treeid").val();
