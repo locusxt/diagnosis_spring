@@ -4,14 +4,8 @@
    "http://www.w3.org/TR/html4/strict.dtd">
 <HTML>
 <HEAD>
-	<TITLE> ZTREE DEMO - beforeEditName / beforeRemove / onRemove / beforeRename / onRename</TITLE>
+	<TITLE>本体管理</TITLE>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-	<!-- <link rel="stylesheet" href="./css/demo.css" type="text/css"> -->
-	<!-- <link rel="stylesheet" href="./css/zTreeStyle/zTreeStyle.css" type="text/css"> -->
-	<!-- // <script type="text/javascript" src="./js/jquery-1.4.4.min.js"></script> -->
-	<!-- // <script type="text/javascript" src="./js/jquery.ztree.core-3.5.js"></script> -->
-	<!-- // <script type="text/javascript" src="./js/jquery.ztree.excheck-3.5.js"></script> -->
-	<!-- // <script type="text/javascript" src="./js/jquery.ztree.exedit-3.5.js"></script> -->
 	<script src="/SpringX/static/basic_js/jquery.min.js"></script>
 	
 	<link href="/SpringX/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
@@ -95,16 +89,25 @@
 			{
 				if (treeNode.name==OntModel.Ontschema[i].subject)
 				{
-					temp=temp+(OntModel.Ontschema[i].subject+OntModel.Ontschema[i].property+OntModel.Ontschema[i].object);
+					mytmp = [];
+					mytmp.push(OntModel.Ontschema[i].property);
+					mytmp.push(OntModel.Ontschema[i].object);
+					//temp=temp+(OntModel.Ontschema[i].subject+OntModel.Ontschema[i].property+OntModel.Ontschema[i].object);
 					//$("#show_record").text(OntModel.Ontschema[i].property);
 					//$("#show_record").text(OntModel.Ontschema[i].object);
-
+					temp.push(mytmp);
 				}
 
-
-				$("#show_record").text(temp); //显示之前的关系记录
+				//$("#show_record").text(temp); //显示之前的关系记录
 			}
-
+			str = "";
+			for (var i = 0; i < temp.length; ++i){
+				str += "<tr>\
+							<td>" + temp[i][0] + "</td>\
+							<td>" + temp[i][1] + "</td>\
+						</tr>";
+			}
+			$('#show_record').html(str);
 		};
 	   $( function buildOntModel()
 		{
@@ -263,14 +266,14 @@
 		<div class="right col-sm-8">
 			<div class="panel panel-default">
 				<div class="panel-body">
-						<div class="middle" >
-							<form>
-							<textarea rows="10" cols="40" name="usrtxt" wrap="hard" id="show_record">
-
-							</textarea>
-
-							</form>
+					<div class="middle row" >
+						<div class="col-sm-8">
+							<table id="show_record" class="table">
+							
+							</table>
+							<hr />
 						</div>
+					</div>
 					<p class="ridge">
 						<input id="treeid" type="text" />
 					</p>
@@ -282,7 +285,7 @@
 						<select name="object" id="object">
 
 						</select>
-						<input class="btn btn-info" id="buildOntModel" type="button" value="生成本体模型"/>
+						<input class="btn btn-info" id="buildOntModel" type="button" value="添加"/>
 					</form>
 				</div>
 			</div>
