@@ -37,12 +37,14 @@ public class JenaReasoner {
 		System.out.println(rules.size());
 		Reasoner reasoner = new GenericRuleReasoner(rules);
 		InfModel infmodel = ModelFactory.createInfModel(reasoner, mData);
+		
+		
 		// Query for all things related to "a" by "p"
 		Property p = mData.getProperty(defaultNameSpace, "hasdiseaseof");
 		//Resource a = mData.getResource(defaultNameSpace + "a");
 		StmtIterator i = infmodel.listStatements(null, p, (RDFNode)null);
 		
-		List <String> diseaseList = new ArrayList<String>();
+		List<String> diseaseList = new ArrayList<String>();
 		while (i.hasNext()) {
 		    //System.out.println(" - " + PrintUtil.print(i.nextStatement()));
 		    Statement stmt = i.nextStatement();
@@ -50,6 +52,16 @@ public class JenaReasoner {
 			System.out.println(removePrefix(stmt.getObject().toString()));
 		}
 		info.setPossibleDisease(diseaseList.toArray(new String[1]));
+		
+		p = mData.getProperty(defaultNameSpace, "get_advice_of");
+		i = infmodel.listStatements(null, p, (RDFNode)null);
+		List<String> testList = new ArrayList<String>();
+		while(i.hasNext()){
+			Statement stmt = i.nextStatement();
+			testList.add(removePrefix(stmt.getObject().toString()));
+			System.out.println(removePrefix(stmt.getObject().toString()));
+		}
+		info.setTest(testList.toArray(new String[1]));
 	}
 	
 	public void genDatamodel(PatientInfo info){
