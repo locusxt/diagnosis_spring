@@ -1,16 +1,46 @@
 package com.locusxt.app.jena;
 
+import java.util.List;
+
 import com.hp.hpl.jena.ontology.DatatypeProperty;
 import com.hp.hpl.jena.ontology.ObjectProperty;
 import com.hp.hpl.jena.ontology.OntClass;
 import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.ontology.OntModelSpec;
+import com.hp.hpl.jena.rdf.model.InfModel;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
+import com.hp.hpl.jena.reasoner.Reasoner;
+import com.hp.hpl.jena.reasoner.rulesys.GenericRuleReasoner;
+import com.hp.hpl.jena.reasoner.rulesys.Rule;
+import com.hp.hpl.jena.sparql.pfunction.library.listIndex;
+import com.hp.hpl.jena.util.PrintUtil;
 import com.locusxt.app.domain.PatientInfo;
 
 public class JenaReasoner {
 	public static String defaultNameSpace="http://somewhere/";
 	public static OntModel mData;
+	
+	public void mytest(){
+		System.out.println("test");
+		List rules = Rule.rulesFromURL("file:a.rules");
+		System.out.println(rules.size());
+		Reasoner reasoner = new GenericRuleReasoner(rules);
+		InfModel infmodel = ModelFactory.createInfModel(reasoner, mData);
+		// Query for all things related to "a" by "p"
+		Property p = mData.getProperty(defaultNameSpace, "hasdiseaseof");
+		Resource a = mData.getResource(defaultNameSpace + "a");
+		StmtIterator i = infmodel.listStatements(null, p, (RDFNode)null);
+		while (i.hasNext()) {
+		    //System.out.println(" - " + PrintUtil.print(i.nextStatement()));
+		    Statement stmt = i.nextStatement();
+			System.out.println(stmt.getObject());
+		}
+	}
 	
 	public void genDatamodel(PatientInfo info){
 		mData=ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM);
@@ -50,5 +80,7 @@ public class JenaReasoner {
 			testProperty[i] = mData.createDatatypeProperty(defaultNameSpace + "has_test_" + info.getTest()[i]);
 			mData.addLiteral(ont, testProperty[i], info.getTestResult()[i]);
 		}
+		
+		mytest();
 	}
 }

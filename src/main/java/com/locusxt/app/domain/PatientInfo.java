@@ -100,11 +100,11 @@ public class PatientInfo {
 	public void update(){
 		//this.possibleDisease = new String[]{"cold", ""};
 		System.out.println("name:" + this.name);
-		this.complaint = new String[]{"headache"};
-		this.complaintDegree = new String[]{"light"};
-		this.complaintTime = new String[]{"7"};
-		this.phyExam = new String[]{"temperature", "bloodpressure"};
-		this.phyExamResult = new String[]{"37", "120"};
+//		this.complaint = new String[]{"headache"};
+//		this.complaintDegree = new String[]{"light"};
+//		this.complaintTime = new String[]{"7"};
+//		this.phyExam = new String[]{"temperature", "bloodpressure"};
+//		this.phyExamResult = new String[]{"37", "120"};
 		JenaReasoner jr = new JenaReasoner();
 		jr.genDatamodel(this);
 	}

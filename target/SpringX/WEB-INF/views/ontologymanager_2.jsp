@@ -266,11 +266,14 @@
 		<div class="right col-sm-8">
 			<div class="panel panel-default">
 				<div class="panel-body">
-						<div class="middle" >
+					<div class="middle row" >
+						<div class="col-sm-8">
 							<table id="show_record" class="table">
-								
+							
 							</table>
+							<hr />
 						</div>
+					</div>
 					<p class="ridge">
 						<input id="treeid" type="text" />
 					</p>
