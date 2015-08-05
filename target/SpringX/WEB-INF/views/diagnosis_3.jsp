@@ -110,10 +110,11 @@
 				});
 			}
 
-			//TODO 
 			function update_patient_info(){
 				console.log(patient_info);
 				update_basic_info();
+				update_phyExamResult();
+				update_testResult();
 				$.ajax({
 				  type: 'POST',
 				  url: "ajax/update_patient_info",
@@ -324,7 +325,6 @@
 								for (var i = 0; i < patient_info.phyExam.length; i++){
 									patient_info.phyExamResult[i] = $('#phy' + i).val();
 								}
-								update_patient_info();
 							}
 						</script>
 
@@ -338,11 +338,11 @@
 								</div>
 							</div>
 							<br />
-							<div class="row">
+							<!-- <div class="row">
 								<div class="col-sm-offset-3">
 	  								<button type="button" class="btn btn-info" onclick="update_phyExamResult();">更新</button>
 								</div>
-							</div>
+							</div> -->
 						</div>
 	
 						<script type="text/javascript">
@@ -363,7 +363,6 @@
 							function update_testResult(){
 								for (var i = 0; i < patient_info.test.length; i++){
 									patient_info.testResult[i] = $('#test' + i).val();
-									update_patient_info();
 								}
 							}
 						</script>
@@ -377,11 +376,11 @@
 								</div>
 							</div>
 							<br />
-							<div class="row">
+							<!-- <div class="row">
 								<div class="col-sm-offset-3">
 	  								<button type="button" class="btn btn-info" onclick="update_testResult();">更新</button>
 								</div>
-							</div>
+							</div> -->
 						</div>
 						
 						<script type="text/javascript">
@@ -448,6 +447,9 @@
 							</li>
 							<li>
 								<a href="#top" class="back-to-top">返回顶部</a>
+							</li>
+							<li>
+								<a href="javascript:void()" onclick="update_patient_info();"><span class="glyphicon glyphicon-refresh"></span>同步</a>
 							</li>
 						</ul>
 					</nav>

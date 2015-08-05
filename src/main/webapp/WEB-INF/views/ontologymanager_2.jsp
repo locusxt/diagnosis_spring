@@ -50,7 +50,7 @@
 
 		var OntModel={
 				zNodes:[
-					{ id:1, pId:0, name:"disease", open:true},
+					{ id:1, pId:0, name:"疾病", open:true},
 					{ id:11, pId:1, name:"上呼吸道感染"},
 					{ id:111, pId:11, name:"普通感冒"},
 					{ id:112, pId:11, name:"流行性感冒"},

@@ -1,5 +1,6 @@
 package com.locusxt.app.jena;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.hp.hpl.jena.ontology.DatatypeProperty;
@@ -25,7 +26,12 @@ public class JenaReasoner {
 	public static String defaultNameSpace="http://somewhere/";
 	public static OntModel mData;
 	
-	public void mytest(){
+	private String removePrefix(String str){
+		int i = str.lastIndexOf('/');
+		return str.substring(i + 1);
+	}
+	
+	public void mytest(PatientInfo info){
 		System.out.println("test");
 		List rules = Rule.rulesFromURL("file:a.rules");
 		System.out.println(rules.size());
@@ -33,13 +39,17 @@ public class JenaReasoner {
 		InfModel infmodel = ModelFactory.createInfModel(reasoner, mData);
 		// Query for all things related to "a" by "p"
 		Property p = mData.getProperty(defaultNameSpace, "hasdiseaseof");
-		Resource a = mData.getResource(defaultNameSpace + "a");
+		//Resource a = mData.getResource(defaultNameSpace + "a");
 		StmtIterator i = infmodel.listStatements(null, p, (RDFNode)null);
+		
+		List <String> diseaseList = new ArrayList<String>();
 		while (i.hasNext()) {
 		    //System.out.println(" - " + PrintUtil.print(i.nextStatement()));
 		    Statement stmt = i.nextStatement();
-			System.out.println(stmt.getObject());
+		    diseaseList.add(removePrefix(stmt.getObject().toString()));
+			System.out.println(removePrefix(stmt.getObject().toString()));
 		}
+		info.setPossibleDisease(diseaseList.toArray(new String[1]));
 	}
 	
 	public void genDatamodel(PatientInfo info){
@@ -81,6 +91,6 @@ public class JenaReasoner {
 			mData.addLiteral(ont, testProperty[i], info.getTestResult()[i]);
 		}
 		
-		mytest();
+		mytest(info);
 	}
 }
