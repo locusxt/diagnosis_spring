@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.locusxt.app.domain.MyOntology;
-import com.locusxt.app.domain.RuleMsg;
+import com.locusxt.app.domain.ResponseMsg;
+import com.locusxt.app.jena.SchemaBuilder;
 
 @Controller
 @RequestMapping("/ontology")
@@ -19,7 +20,10 @@ public class OntologyController {
 	}
 	
 	@RequestMapping(value = "/ajax/post_ontology", method = RequestMethod.POST)
-	public @ResponseBody RuleMsg updateOntology(@RequestBody MyOntology onto){
-		
+	public @ResponseBody ResponseMsg updateOntology(@RequestBody MyOntology onto){
+		System.out.println("ontology");
+		SchemaBuilder builder = new SchemaBuilder();
+		builder.build(onto);
+		return new ResponseMsg("ok");
 	}
 }

@@ -48,29 +48,58 @@
 		var x;
 		var y;
 
+		// var OntModel={
+		// 		znodes:[
+		// 			{ id:1, pId:0, name:"疾病", open:true},
+		// 			{ id:11, pId:1, name:"上呼吸道感染"},
+		// 			{ id:111, pId:11, name:"普通感冒"},
+		// 			{ id:112, pId:11, name:"流行性感冒"},
+		// 			{ id:113, pId:11, name:"咽炎感染"},
+		// 			{ id:1121, pId:112, name:"单纯型流行性感冒"},
+		// 			{ id:1122, pId:112, name:"肺炎型流行性感冒"},
+		// 			{ id:2, pId:0, name:"症状", open:false},
+		// 			{ id:21, pId:2, name:"咽干"},
+		// 			{ id:22, pId:2, name:"咽痒"},
+		// 			{ id:23, pId:2, name:"灼烧"},
+		// 			{ id:24, pId:2, name:"发热"},
+		// 			{ id:25, pId:2, name:"鼻塞"},
+		// 			{ id:26, pId:2, name:"流涕"}
+		// 		],
+		// 		Ontschema:[
+		// 			{subject:"普通感冒",property:"has_sympotom_of",object:"咽干"},
+		// 			{subject:"普通感冒",property:"has_sympotom_of",object:"发热"}
+		// 		]
+		// }
 		var OntModel={
-				zNodes:[
-					{ id:1, pId:0, name:"疾病", open:true},
-					{ id:11, pId:1, name:"上呼吸道感染"},
-					{ id:111, pId:11, name:"普通感冒"},
-					{ id:112, pId:11, name:"流行性感冒"},
-					{ id:113, pId:11, name:"咽炎感染"},
-					{ id:1121, pId:112, name:"单纯型流行性感冒"},
-					{ id:1122, pId:112, name:"肺炎型流行性感冒"},
-					{ id:2, pId:0, name:"症状", open:false},
-					{ id:21, pId:2, name:"咽干"},
-					{ id:22, pId:2, name:"咽痒"},
-					{ id:23, pId:2, name:"灼烧"},
-					{ id:24, pId:2, name:"发热"},
-					{ id:25, pId:2, name:"鼻塞"},
-					{ id:26, pId:2, name:"流涕"}
+				znodes:[
+					{ id:1, pId:0, name:"Disease"},
+					{ id:11, pId:1, name:"UpperRespiratoryInfections"},
+					{ id:111, pId:11, name:"CommonCold"},
+					{ id:112, pId:11, name:"Flu"},
+					{ id:113, pId:11, name:"Pharyngitis"},
+					{ id:1121, pId:112, name:"SimpleInfluenza"},
+					{ id:2, pId:0, name:"Symptom"},
+					{ id:21, pId:2, name:"DryPharynx"},
+					{ id:24, pId:2, name:"Fever"},
+					{ id:25, pId:2, name:"NasalTampon"}
 				],
-				Ontschema:[
-					{subject:"普通感冒",property:"has_sympotom_of",object:"咽干"},
-					{subject:"普通感冒",property:"has_sympotom_of",object:"发热"}
+				ontschema:[
+					{subject:"CommonCold",property:"has_sympotom_of",object:"DryPharynx"},
+					{subject:"CommonCold",property:"has_sympotom_of",object:"Fever"}
 				]
 		}
 		var log, className = "dark";
+
+		function post_ontology(){
+			$.ajax({
+			  type: 'POST',
+			  url: "ajax/post_ontology",
+			  data: JSON.stringify (OntModel), // or JSON.stringify ({name: 'jonas'}),
+			  success: function(d) { alert('data: ' + d); },
+			  contentType: "application/json",
+			  dataType: 'json'
+			});
+		}
 
 		function zTreeOnClick(event,treeId,treeNode)       //双击一个树节点
 		{
@@ -79,7 +108,7 @@
 			$("#treeid").val(treeNode.name); //显示树节点名字
 			$(function(){
 				$('#object').html('');
-				$.each(OntModel.zNodes,function(i,item){
+				$.each(OntModel.znodes,function(i,item){
 					//alert(val);
 					$("#object").append("<option>"+item.name+"</option>"); //遍历其他节点作为下拉菜单
 				})
@@ -201,7 +230,7 @@
 			if (btn) btn.bind("click", function(){
 				var zTree = $.fn.zTree.getZTreeObj("treeDemo");
 				 x=zTree.addNodes(treeNode, {id:(100 + newCount), pId:treeNode.id, name:"new node" + (newCount++)});
-				var m = $.merge(OntModel.zNodes,x);
+				var m = $.merge(OntModel.znodes,x);
 
 				return false;
 			});
@@ -215,10 +244,10 @@
 		}
 
 		$(document).ready(function(){
-			$.fn.zTree.init($("#treeDemo"), setting, OntModel.zNodes);
+			$.fn.zTree.init($("#treeDemo"), setting, OntModel.znodes);
 			$("#selectAll").bind("click", selectAll);
 			//var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-			//zNodes=zTree.getNodes();
+			//znodes=zTree.getNodes();
 		})
 		//-->
 	</SCRIPT>

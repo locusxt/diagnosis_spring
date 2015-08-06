@@ -2,7 +2,7 @@ package com.locusxt.app.domain;
 
 public class ZNodes {
 	String id;
-	String pId;
+	String pid;
 	String name;
 	
 	public void setId(String id){
@@ -13,12 +13,12 @@ public class ZNodes {
 		return this.id;
 	}
 	
-	public void setPId(String pId){
-		this.pId = pId;
+	public void setPId(String pid){
+		this.pid = pid;
 	}
 	
 	public String getPId(){
-		return this.pId;
+		return this.pid;
 	}
 	
 	public void setName(String name){

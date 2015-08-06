@@ -2,15 +2,15 @@ package com.locusxt.app.domain;
 
 
 public class MyOntology {
-	ZNodes zNodes[];
+	ZNodes znodes[];
 	Ontschema ontschema[];
 	
-	public void setZNodes(ZNodes zNodes[]){
-		this.zNodes = zNodes;
+	public void setZNodes(ZNodes znodes[]){
+		this.znodes = znodes;
 	}
 	
 	public ZNodes[] getZNodes(){
-		return this.zNodes;
+		return this.znodes;
 	}
 	
 	public void setOntschema(Ontschema ontschema[]){
