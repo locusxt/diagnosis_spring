@@ -91,7 +91,20 @@
 		}
 		var log, className = "dark";
 
+		function clear_ontmodel(){
+			for (var i = 0; i < OntModel.znodes.length; ++i){
+				for (var key in OntModel.znodes[i]){
+					console.log(key);
+					if (key != "id" && key != "pid" && key != "name"){
+						console.log(OntModel.znodes[i][key]);
+						delete OntModel.znodes[i][key];
+					}
+				}
+			}
+		}
+
 		function post_ontology(){
+			clear_ontmodel();
 			$.ajax({
 			  type: 'POST',
 			  url: "ajax/post_ontology",

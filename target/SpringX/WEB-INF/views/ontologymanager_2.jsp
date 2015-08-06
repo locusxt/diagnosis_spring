@@ -32,7 +32,8 @@
 			},
 			data: {
 				simpleData: {
-					enable: true
+					enable: true,
+					pIdKey: "pid"
 				}
 			},
 			callback: {
@@ -72,16 +73,16 @@
 		// }
 		var OntModel={
 				znodes:[
-					{ id:1, pId:0, name:"Disease"},
-					{ id:11, pId:1, name:"UpperRespiratoryInfections"},
-					{ id:111, pId:11, name:"CommonCold"},
-					{ id:112, pId:11, name:"Flu"},
-					{ id:113, pId:11, name:"Pharyngitis"},
-					{ id:1121, pId:112, name:"SimpleInfluenza"},
-					{ id:2, pId:0, name:"Symptom"},
-					{ id:21, pId:2, name:"DryPharynx"},
-					{ id:24, pId:2, name:"Fever"},
-					{ id:25, pId:2, name:"NasalTampon"}
+					{ id:1, pid:0, name:"Disease"},
+					{ id:11, pid:1, name:"UpperRespiratoryInfections"},
+					{ id:111, pid:11, name:"CommonCold"},
+					{ id:112, pid:11, name:"Flu"},
+					{ id:113, pid:11, name:"Pharyngitis"},
+					{ id:1121, pid:112, name:"SimpleInfluenza"},
+					{ id:2, pid:0, name:"Symptom"},
+					{ id:21, pid:2, name:"DryPharynx"},
+					{ id:24, pid:2, name:"Fever"},
+					{ id:25, pid:2, name:"NasalTampon"}
 				],
 				ontschema:[
 					{subject:"CommonCold",property:"has_sympotom_of",object:"DryPharynx"},

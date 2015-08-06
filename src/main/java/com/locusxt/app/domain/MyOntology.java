@@ -1,6 +1,8 @@
 package com.locusxt.app.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+@JsonIgnoreProperties(value={})
 public class MyOntology {
 	ZNodes znodes[];
 	Ontschema ontschema[];

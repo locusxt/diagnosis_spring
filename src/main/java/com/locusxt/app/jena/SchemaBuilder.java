@@ -1,5 +1,8 @@
 package com.locusxt.app.jena;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -100,7 +103,6 @@ public class SchemaBuilder {
 		}
 		
 		for (int i = 0; i < zNodesNum; ++i){
-			String id = zNodes[i].getId();
 			String parentName = map.get(zNodes[i].getPId());
 			if (parentName == null){
 				continue;
@@ -116,6 +118,13 @@ public class SchemaBuilder {
 			OntClass subject = omap.get(rmap.get(ontschema[i].getSubject()));
 			OntClass object = omap.get(rmap.get(ontschema[i].getObject()));
 			modelschema.add(subject, property, object);
+		}
+		
+		try {
+			FileOutputStream out = new FileOutputStream(new File("a.xml"));
+			modelschema.write(out);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 		}
 		modelschema.write(System.out);
 	}
