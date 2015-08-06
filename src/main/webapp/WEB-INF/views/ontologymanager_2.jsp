@@ -49,46 +49,52 @@
 		var x;
 		var y;
 
-		// var OntModel={
-		// 		znodes:[
-		// 			{ id:1, pId:0, name:"疾病", open:true},
-		// 			{ id:11, pId:1, name:"上呼吸道感染"},
-		// 			{ id:111, pId:11, name:"普通感冒"},
-		// 			{ id:112, pId:11, name:"流行性感冒"},
-		// 			{ id:113, pId:11, name:"咽炎感染"},
-		// 			{ id:1121, pId:112, name:"单纯型流行性感冒"},
-		// 			{ id:1122, pId:112, name:"肺炎型流行性感冒"},
-		// 			{ id:2, pId:0, name:"症状", open:false},
-		// 			{ id:21, pId:2, name:"咽干"},
-		// 			{ id:22, pId:2, name:"咽痒"},
-		// 			{ id:23, pId:2, name:"灼烧"},
-		// 			{ id:24, pId:2, name:"发热"},
-		// 			{ id:25, pId:2, name:"鼻塞"},
-		// 			{ id:26, pId:2, name:"流涕"}
-		// 		],
-		// 		Ontschema:[
-		// 			{subject:"普通感冒",property:"has_sympotom_of",object:"咽干"},
-		// 			{subject:"普通感冒",property:"has_sympotom_of",object:"发热"}
-		// 		]
-		// }
 		var OntModel={
 				znodes:[
-					{ id:1, pid:0, name:"Disease"},
-					{ id:11, pid:1, name:"UpperRespiratoryInfections"},
-					{ id:111, pid:11, name:"CommonCold"},
-					{ id:112, pid:11, name:"Flu"},
-					{ id:113, pid:11, name:"Pharyngitis"},
-					{ id:1121, pid:112, name:"SimpleInfluenza"},
-					{ id:2, pid:0, name:"Symptom"},
-					{ id:21, pid:2, name:"DryPharynx"},
-					{ id:24, pid:2, name:"Fever"},
-					{ id:25, pid:2, name:"NasalTampon"}
+					{ id:1, pid:0, name:"疾病"},
+					{ id:11, pid:1, name:"上呼吸道感染"},
+					{ id:111, pid:11, name:"普通感冒"},
+					{ id:112, pid:11, name:"流行性感冒"},
+					{ id:113, pid:11, name:"咽炎感染"},
+					{ id:1121, pid:112, name:"单纯型流行性感冒"},
+					{ id:1122, pid:112, name:"肺炎型流行性感冒"},
+					{ id:2, pid:0, name:"症状"},
+					{ id:21, pid:2, name:"咽干"},
+					{ id:22, pid:2, name:"咽痒"},
+					{ id:23, pid:2, name:"灼烧"},
+					{ id:24, pid:2, name:"发热"},
+					{ id:25, pid:2, name:"鼻塞"},
+					{ id:26, pid:2, name:"流涕"},
+					{ id:3, pid:0, name:"检查项目"},
+					{ id:31, pid:3, name:"体温"},
+					{ id:32, pid:3, name:"血压"},
+					{ id:33, pid:3, name:"肺活量"},
+					{ id:34, pid:3, name:"验血"},
+					{ id:35, pid:3, name:"x光"},
 				],
-				ontschema:[
-					{subject:"CommonCold",property:"has_sympotom_of",object:"DryPharynx"},
-					{subject:"CommonCold",property:"has_sympotom_of",object:"Fever"}
+				Ontschema:[
+					{subject:"普通感冒",property:"has_sympotom_of",object:"咽干"},
+					{subject:"普通感冒",property:"has_sympotom_of",object:"发热"}
 				]
 		}
+		// var OntModel={
+		// 		znodes:[
+		// 			{ id:1, pid:0, name:"Disease"},
+		// 			{ id:11, pid:1, name:"UpperRespiratoryInfections"},
+		// 			{ id:111, pid:11, name:"CommonCold"},
+		// 			{ id:112, pid:11, name:"Flu"},
+		// 			{ id:113, pid:11, name:"Pharyngitis"},
+		// 			{ id:1121, pid:112, name:"SimpleInfluenza"},
+		// 			{ id:2, pid:0, name:"Symptom"},
+		// 			{ id:21, pid:2, name:"DryPharynx"},
+		// 			{ id:24, pid:2, name:"Fever"},
+		// 			{ id:25, pid:2, name:"NasalTampon"}
+		// 		],
+		// 		ontschema:[
+		// 			{subject:"CommonCold",property:"has_sympotom_of",object:"DryPharynx"},
+		// 			{subject:"CommonCold",property:"has_sympotom_of",object:"Fever"}
+		// 		]
+		// }
 		var log, className = "dark";
 
 		function clear_ontmodel(){

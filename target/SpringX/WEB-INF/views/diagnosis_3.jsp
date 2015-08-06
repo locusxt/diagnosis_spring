@@ -58,15 +58,18 @@
 			}
 
 			function get_complaint_list(){
-				$.ajax( {
-					type : "get",
-					url : "ajax/get_complaints.do",
-					dataType:"json",
-					success : function(json) {
-						chief_complaint_list = json.complaintList;
-						update_chief_complaint_list();
-					}
-				});
+				chief_complaint_list = ['toothache', 'headache', 'cough', 'NasalTampon', 'DryPharynx'];
+				chief_complaint_list_ch = ['牙痛', '头痛', '咳嗽', '鼻塞', '咽干'];
+				update_chief_complaint_list();
+				// $.ajax( {
+				// 	type : "get",
+				// 	url : "ajax/get_complaints.do",
+				// 	dataType:"json",
+				// 	success : function(json) {
+				// 		chief_complaint_list = json.complaintList;
+				// 		update_chief_complaint_list();
+				// 	}
+				// });
 			}
 
 			function post_basicinfo(){
@@ -250,7 +253,7 @@
 							function update_chief_complaint_list(){
 								str = "";
 								for (var i = 0; i < chief_complaint_list.length; i++){
-									str += "<option value=\"" + i + "\">" + chief_complaint_list[i] + "</option>";
+									str += "<option value=\"" + i + "\">" + chief_complaint_list_ch[i] + "</option>";
 								}
 								$('#input_chief_complaint').html(str);
 								$('#input_chief_complaint').val(0);
@@ -387,6 +390,9 @@
 							function update_disease_table(){
 								str = "<tr><th>病名</th><th>概率</th></tr>";
 								for (var i = 0; i < patient_info.possibleDisease.length; ++i){
+									if (patient_info.possibleDisease[i] == null){
+										continue;
+									}
 									str += "<tr>\
 												<td>" + patient_info.possibleDisease[i] + "</td>\
 												<td></td>\
@@ -408,10 +414,18 @@
 							function update_advice_table(){
 								str = "<tr><th>处理意见</th><th>具体描述</th></tr>";
 								for (var i = 0; i < patient_info.advice.length; ++i){
-									str += "<tr>\
+									var index = patient_info.test.indexOf(patient_info.advice[i]);
+									if ( index == -1){
+										patient_info.test.push(patient_info.advice[i]);
+										patient_info.testResult.push("");
+									}
+									if (index == -1 || (index != -1 && (patient_info.testResult[index] == undefined || patient_info.testResult[index] == "")))
+									{
+										str += "<tr>\
 												<td>" + patient_info.advice[i] + "</td>\
 												<td></td>\
 											</tr>";
+									}
 								}
 								$('#advice_table').html(str);
 							}
@@ -449,7 +463,7 @@
 								<a href="#top" class="back-to-top">返回顶部</a>
 							</li>
 							<li>
-								<a href="javascript:void()" onclick="update_patient_info();"><span class="glyphicon glyphicon-refresh"></span>同步</a>
+								<a href="javascript:void(0)" onclick="update_patient_info();"><span class="glyphicon glyphicon-refresh"></span>同步</a>
 							</li>
 						</ul>
 					</nav>

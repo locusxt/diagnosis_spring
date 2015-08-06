@@ -28,15 +28,15 @@
 			rule_disease_list = [];
 			rule_test_list = [];
 
-			symptom_list = ['牙痛', '头痛', '咳嗽'];
-			symptom_list_en = ['toothache', 'headache', 'cough'];
-			dataobj_list = ['血压', '体温'];
-			dataobj_list_en = ['pressure', 'temperature'];
-			dataobj_priority_list = ['has_test_pressure', 'has_test_temperature'];
-			disease_list = ['diseaseA', 'diseaseB'];
-			disease_list_en = ['diseaseA', 'diseaseB'];
-			test_list = ['testA', 'testB', 'testC'];
-			test_list_en = ['testA', 'testB', 'testC'];
+			symptom_list = ['牙痛', '头痛', '咳嗽', '鼻塞', '咽干'];
+			symptom_list_en = ['toothache', 'headache', 'cough', 'NasalTampon', 'DryPharynx'];
+			dataobj_list = ['x光', '验血', '血压', '体温', '肺活量'];
+			dataobj_list_en = ['x_ray', 'blood_test', 'pressure', 'temperature', 'LungVolume'];
+			dataobj_priority_list = ['has_test_x_ray', 'has_test_blood_test', 'has_test_pressure', 'has_test_temperature', 'has_test_LungVolume'];
+			disease_list = ['普通感冒', '咽炎'];
+			disease_list_en = ['CommonCold', 'Pharyngitis'];
+			test_list = ['x光', '验血', '血压', '体温', '肺活量'];
+			test_list_en = ['x_ray', 'blood_test', 'pressure', 'temperature', 'LungVolume'];
 			degree_list = ['未选择', '轻度', '中度', '重度'];
 			degree_list_en = ['unselected', 'light', 'medium', 'heavy'];
 

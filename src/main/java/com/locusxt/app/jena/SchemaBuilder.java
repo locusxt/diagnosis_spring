@@ -127,5 +127,10 @@ public class SchemaBuilder {
 			e.printStackTrace();
 		}
 		modelschema.write(System.out);
+
 	}
+	
+//	public MyOntology getOntology(){
+//		
+//	}
 }

@@ -46,12 +46,13 @@ public class JenaReasoner {
 		
 		List<String> diseaseList = new ArrayList<String>();
 		while (i.hasNext()) {
-		    //System.out.println(" - " + PrintUtil.print(i.nextStatement()));
 		    Statement stmt = i.nextStatement();
+		    //System.out.println(" - " + PrintUtil.print(stmt));
 		    diseaseList.add(removePrefix(stmt.getObject().toString()));
 			System.out.println(removePrefix(stmt.getObject().toString()));
 		}
-		info.setPossibleDisease(diseaseList.toArray(new String[1]));
+		if (diseaseList.size() != 0)
+			info.setPossibleDisease(diseaseList.toArray(new String[1]));
 		
 		p = mData.getProperty(defaultNameSpace, "get_advice_of");
 		i = infmodel.listStatements(null, p, (RDFNode)null);
@@ -61,7 +62,8 @@ public class JenaReasoner {
 			testList.add(removePrefix(stmt.getObject().toString()));
 			System.out.println(removePrefix(stmt.getObject().toString()));
 		}
-		info.setTest(testList.toArray(new String[1]));
+		if (testList.size() != 0)
+			info.setAdvice(testList.toArray(new String[1]));
 	}
 	
 	public void genDatamodel(PatientInfo info){
@@ -91,7 +93,8 @@ public class JenaReasoner {
 		for (int i = 0; i < phyExamNum; ++i){
 			phyExam[i] = mData.createClass(defaultNameSpace + info.getPhyExam()[i]);
 			phyExamProperty[i] = mData.createDatatypeProperty(defaultNameSpace + "has_test_" + info.getPhyExam()[i]);
-			mData.addLiteral(ont, phyExamProperty[i], info.getPhyExamResult()[i]);
+			if (!info.getPhyExamResult()[i].equals(""))
+				mData.addLiteral(ont, phyExamProperty[i], Integer.parseInt(info.getPhyExamResult()[i]));
 		}
 		
 		int testNum = info.getTest().length;
@@ -100,8 +103,17 @@ public class JenaReasoner {
 		for (int i = 0; i < testNum; ++i){
 			test[i] = mData.createClass(defaultNameSpace + info.getTest()[i]);
 			testProperty[i] = mData.createDatatypeProperty(defaultNameSpace + "has_test_" + info.getTest()[i]);
-			mData.addLiteral(ont, testProperty[i], info.getTestResult()[i]);
+			if (!info.getTestResult()[i].equals(""))
+				mData.addLiteral(ont, testProperty[i], Integer.parseInt(info.getTestResult()[i]));
 		}
+		
+		System.out.println("========");
+		StmtIterator i = mData.listStatements(null, null, (RDFNode)null);
+		while (i.hasNext()) {
+		    Statement stmt = i.nextStatement();
+		    System.out.println(" - " + PrintUtil.print(stmt));
+		}
+		System.out.println("--------");
 		
 		mytest(info);
 	}
