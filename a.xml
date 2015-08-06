@@ -1,0 +1,54 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:j.0="http://somewhere/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#" > 
+  <rdf:Description rdf:about="http://somewhere/NasalTampon">
+    <rdfs:subClassOf rdf:resource="http://somewhere/Symptom"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://somewhere/Pharyngitis">
+    <rdfs:subClassOf rdf:resource="http://somewhere/UpperRespiratoryInfections"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://somewhere/new node1">
+    <rdfs:subClassOf rdf:resource="http://somewhere/Symptom"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://somewhere/Symptom">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://somewhere/Flu">
+    <rdfs:subClassOf rdf:resource="http://somewhere/UpperRespiratoryInfections"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://somewhere/Fever">
+    <rdfs:subClassOf rdf:resource="http://somewhere/Symptom"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://somewhere/DryPharynx">
+    <rdfs:subClassOf rdf:resource="http://somewhere/Symptom"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://somewhere/Disease">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://somewhere/has_sympotom_of">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://somewhere/UpperRespiratoryInfections">
+    <rdfs:subClassOf rdf:resource="http://somewhere/Disease"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://somewhere/CommonCold">
+    <j.0:has_sympotom_of rdf:resource="http://somewhere/Fever"/>
+    <j.0:has_sympotom_of rdf:resource="http://somewhere/DryPharynx"/>
+    <rdfs:subClassOf rdf:resource="http://somewhere/UpperRespiratoryInfections"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://somewhere/SimpleInfluenza">
+    <rdfs:subClassOf rdf:resource="http://somewhere/Flu"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+</rdf:RDF>
