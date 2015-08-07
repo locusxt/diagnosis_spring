@@ -555,6 +555,12 @@
 			 </div>
 		</footer>
 
+		<nav class="navbar navbar-default navbar-fixed-bottom">
+			<div class="container">
+				<a href="javascript:void(0)" onclick="update_patient_info();"><span class="glyphicon glyphicon-refresh"></span>同步</a>
+			</div>
+		</nav>
+
 		<script type="text/javascript" id="my_init">
 			get_complaint_list();
 			update_chief_complaint_table();

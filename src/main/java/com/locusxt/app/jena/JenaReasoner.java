@@ -11,14 +11,12 @@ import com.hp.hpl.jena.ontology.OntModelSpec;
 import com.hp.hpl.jena.rdf.model.InfModel;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.RDFNode;	
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.reasoner.Reasoner;
 import com.hp.hpl.jena.reasoner.rulesys.GenericRuleReasoner;
 import com.hp.hpl.jena.reasoner.rulesys.Rule;
-import com.hp.hpl.jena.sparql.pfunction.library.listIndex;
 import com.hp.hpl.jena.util.PrintUtil;
 import com.locusxt.app.domain.PatientInfo;
 
@@ -33,7 +31,7 @@ public class JenaReasoner {
 	
 	public void mytest(PatientInfo info){
 		System.out.println("test");
-		List rules = Rule.rulesFromURL("file:a.rules");
+		List<Rule> rules = Rule.rulesFromURL("file:a.rules");
 		System.out.println(rules.size());
 		Reasoner reasoner = new GenericRuleReasoner(rules);
 		InfModel infmodel = ModelFactory.createInfModel(reasoner, mData);

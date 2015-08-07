@@ -58,8 +58,8 @@
 			}
 
 			function get_complaint_list(){
-				chief_complaint_list = ['toothache', 'headache', 'cough', 'NasalTampon', 'DryPharynx'];
-				chief_complaint_list_ch = ['牙痛', '头痛', '咳嗽', '鼻塞', '咽干'];
+				chief_complaint_list = ['sniveel', 'headache', 'cough', 'NasalTampon', 'DryPharynx', 'dizzy', 'throatache', 'FearCold', 'dyspnea', 'hemoptysis'];
+				chief_complaint_list_ch = ['流涕', '头痛', '咳嗽', '鼻塞', '咽干', '头晕', '咽痛', '畏寒', '呼吸困难', '咳血'];
 				update_chief_complaint_list();
 				// $.ajax( {
 				// 	type : "get",
